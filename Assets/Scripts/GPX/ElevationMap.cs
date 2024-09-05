@@ -7,18 +7,20 @@ public class ElevationMap : Graphic
 {
     public Gradient ElevationColor = new Gradient();
     public float thickness = 10f;
-    public FitnessEquipmentDisplay fitnessEquipmentDisplay;
-    public float length = 0f;
-    public float restLength;
-    public Slider distanceSlider;
 
     public Vector2[] points = { new(0, 0), new(0.5f, 1), new(1, 0) };
 
-    protected override void OnValidate()
-    {
-        UpdateGeometry();
-    }
+    public Slider distanceSlider;
+    public FitnessEquipmentDisplay fitnessEquipmentDisplay;
 
+   #if UNITY_EDITOR
+    protected override void OnValidate()
+{
+  UpdateGeometry();
+}
+#endif
+
+    
     protected override void OnPopulateMesh(VertexHelper vh)
     {
         vh.Clear();
@@ -88,7 +90,6 @@ public class ElevationMap : Graphic
             distances[i] = distance;
             length += distance;
 
-
             // Update elevation range
             minElevation = Mathf.Min(minElevation, p2.y);
             maxElevation = Mathf.Max(maxElevation, p2.y);
@@ -103,16 +104,10 @@ public class ElevationMap : Graphic
             float y = MathUtils.Map(points[i].y, minElevation, maxElevation, 0, 1);
             this.points[i] = new Vector2(x, y);
         }
-
-
         distanceSlider.maxValue = length;
-       
-
-
         UpdateGeometry();
 
     }
-
     private void Update()
     {
         if (fitnessEquipmentDisplay && fitnessEquipmentDisplay.distanceTraveled < distanceSlider.maxValue)
@@ -124,8 +119,12 @@ public class ElevationMap : Graphic
 
 
     }
-
-
-
-
 }
+
+
+
+
+
+
+
+

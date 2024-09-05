@@ -25012,14 +25012,12 @@ MonoBehaviour:
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
   thickness: 6
-  fitnessEquipmentDisplay: {fileID: 1671104236}
-  length: 0
-  restLength: 0
-  distanceSlider: {fileID: 97761946}
   points:
   - {x: 0, y: 0}
   - {x: 0.5, y: 1}
   - {x: 1, y: 0}
+  distanceSlider: {fileID: 97761946}
+  fitnessEquipmentDisplay: {fileID: 1671104236}
 --- !u!222 &1576790091
 CanvasRenderer:
   m_ObjectHideFlags: 0
