@@ -27,4 +27,6 @@ MyRide.gpx
 MyRide.mp4
 
 Best use on TV with 1920x1080
+![Alt text]([http://full/path/to/img.jpg](https://github.com/Landixus/VideoGPXRider/blob/main/1.png) "VideoMode")
+![Alt text]([http://full/path/to/img.jpg](https://github.com/Landixus/VideoGPXRider/blob/main/2.png) "TransparentMode")
  
