@@ -120,8 +120,8 @@ public class PrefabDemoDisplay : MonoBehaviour
     public TMP_Text Lay8_EPOC;
 
     public Button openVideoButton;
-    public GameObject bikeRider;
-    public KeyCode bikeRiderOffOnKey = KeyCode.X;
+  //  public GameObject bikeRider;
+  //  public KeyCode bikeRiderOffOnKey = KeyCode.X;
     public KeyCode timerKey;
 
     public GameObject alternateComp;
@@ -367,10 +367,10 @@ public class PrefabDemoDisplay : MonoBehaviour
         CalculateEPOC();
         hideButton();
 
-        if (Input.GetKeyDown(bikeRiderOffOnKey))
+       /* if (Input.GetKeyDown(bikeRiderOffOnKey))
         {
             bikeRider.SetActive(!bikeRider.activeSelf);
-        }
+        }*/
 
         if (Input.GetKeyDown(alternateComputer))
         {

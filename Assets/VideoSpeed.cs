@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.UI;
 using TMPro;
+using System;
 using System.Threading;
+
 
 
 public class VideoSpeed : MonoBehaviour
@@ -12,14 +14,14 @@ public class VideoSpeed : MonoBehaviour
     // 1 = 20Km/h, 2 = 40Km/h, 
     [SerializeField] public VideoPlayer videoPlayer;
 
-    public float videoSpeed = 1f;
+    public float videoSpeed = 0f;
     public float maxVideoSpeed = 10f;
     public float minVideoSpeed = 0f;
     public FitnessEquipmentDisplay fec;
     public float fecSpeed;
 
     public string pathTotheVideo;
-   // public TMP_InputField inputField;
+    // public TMP_InputField inputField;
     public Button okButton;
     public KeyCode toggleKey = KeyCode.V;
     public KeyCode videoRotate = KeyCode.R;
@@ -35,8 +37,16 @@ public class VideoSpeed : MonoBehaviour
     //For half the Video Speed
     public bool halfSpeed = false;
     public Button VSpeedButton;
-    public Text  buttenText;
+    public Text buttenText;
     public TMP_Text timeText;
+
+    //GetTrackLength of GPX
+    public ElevationMap elevationMap;
+    private float lastCheckTime = 0f;
+    // private float checkInterval = 1f; // Wie oft überprüft wird, z.B. jede Sekunde
+    private float lastDistance = 0f; // Um zu überprüfen, ob sich die Distanz ändert
+    public float checkInterval = 1f;
+    private float speedMultiplier;
 
     private void Start()
     {
@@ -53,30 +63,56 @@ public class VideoSpeed : MonoBehaviour
         // ...and we set the audio source for this track
         videoPlayer.SetTargetAudioSource(0, audioSource);
         //videoPlayer.url = pathTotheVideo;
-        
+
         //video set to halfSpeed if MotorCam was used
         halfSpeed = false;
+
+        InvokeRepeating(nameof(AdjustSpeed), 2, checkInterval);
+
+
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*   if (Input.GetKeyDown(toggleKey))
-           {
-               ToggleInputField();
-           }*/
-        if (halfSpeed == false)
+
+        float speed = fec.GetComponent<FitnessEquipmentDisplay>().speed;
+        //  if (motorCam) speed /= 40f;
+        //  else
+        speed /= 20f;
+        videoPlayer.playbackSpeed = speed * speedMultiplier;
+
+        /*
+        // Berechne den Fortschritt der Distanz als Prozentsatz
+        if (elevationMap.distanceSlider.maxValue > 0)
         {
-            fecSpeed = fec.GetComponent<FitnessEquipmentDisplay>().speed;
-            videoPlayer.playbackSpeed = fecSpeed / 20f;
-        }
-        else
-        {
-            // fi it was a motorCam the video could be to fast, so we reduce to 50%
-            fecSpeed = fec.GetComponent<FitnessEquipmentDisplay>().speed;
-            videoPlayer.playbackSpeed = fecSpeed / 40f;
-        }
+            float distPercent = fec.distanceTraveled / elevationMap.distanceSlider.maxValue;
+            float expectedVideoTime = (float)(distPercent * videoPlayer.length);
+
+            // Überprüfe, wie weit das Video fortgeschritten sein sollte
+            float currentVideoTime = (float)videoPlayer.time;
+            float timeDifference = expectedVideoTime - currentVideoTime;
+
+            // Wenn der Unterschied zu groß ist, passe die Geschwindigkeit an
+            if (Mathf.Abs(timeDifference) > 0.1f) // Toleranz von 0.1 Sekunden
+            {
+                // Ändere die Geschwindigkeit proportional zur Diskrepanz
+                float adjustmentFactor = Mathf.Clamp(timeDifference * 0.5f, -0.5f, 0.5f); // Verhindere extreme Anpassungen
+                videoPlayer.playbackSpeed = 1.0f + adjustmentFactor;
+
+                Debug.Log("Expected Video Time: " + expectedVideoTime);
+                Debug.Log("Current Video Time: " + currentVideoTime);
+                Debug.Log("Time Difference: " + timeDifference);
+                Debug.Log("Adjusted PlayBackSpeed: " + videoPlayer.playbackSpeed);
+            }
+
+            // Speichere den Zeitpunkt des letzten Checks
+            lastCheckTime = Time.time;
+        }*/
+
+        // else
+        // videoPlayer.playbackSpeed = 1;
 
         if (Input.GetKeyDown(videoRotate))
         {
@@ -111,6 +147,28 @@ public class VideoSpeed : MonoBehaviour
 
             // Setze den Text des UI-Textfeldes
             timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
+    }
+
+
+    void AdjustSpeed()
+    {
+        // Only execute if the GPX exists and track length has been stored in the distance slider
+        if (elevationMap.distanceSlider.maxValue <= 0f) return;
+        // Get the percentage we've travelled
+        float distPercent = fec.distanceTraveled / elevationMap.distanceSlider.maxValue;
+        // Get the time of the video that matches the travel distance
+        float expectedVideoTime = (float)(distPercent * videoPlayer.length);
+        // If the time doesn't match, we speed the video up/down
+        float timeDifference = expectedVideoTime - (float)videoPlayer.time;
+        if (Mathf.Abs(timeDifference) > 0.1f)
+        {
+            speedMultiplier = MathUtils.Map(timeDifference, -10, 10, 0.9f, 1.1f);
+            speedMultiplier = Mathf.Clamp(speedMultiplier, 0.9f, 1.1f);
+        }
+        else
+        {
+            speedMultiplier = 1f;
         }
     }
 
@@ -149,16 +207,16 @@ public class VideoSpeed : MonoBehaviour
          {
              SetVolume(0f);
          }*/
-        
+
 
         if (halfSpeed)
         {
-            
+
             if (buttenText != null)
             {
                 buttenText.text = "100%";
             }
-                       
+
         }
         if (!halfSpeed)
         {
