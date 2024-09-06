@@ -25,6 +25,11 @@ If the Video file match the GPX File the Data is shown as an Image on the UI
 Like:
 MyRide.gpx
 MyRide.mp4
+you can find some videos with GPX on my YT https://www.youtube.com/watch?v=pLBt1QHeNA0&list=PLyl8qxxibH53DYUZZVSrpSV-Ur99N6ca8
+Download release: https://drive.google.com/file/d/1HhvUdHvcTAKY43VYuxGyQfwTMFUJx0LG/view?usp=sharing
 
 Best use on TV with 1920x1080
+![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/1.png "VideoMode")
+![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/2.png "TransparentMode")
+
  
