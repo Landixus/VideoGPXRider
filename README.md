@@ -8,7 +8,20 @@ To make it easy for you to get started with GitLab, here's a list of recommended
 
 Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
 
+<<<<<<< HEAD
 ## Add your files
+=======
+If the Video file match the GPX File the Data is shown as an Image on the UI
+Like:
+MyRide.gpx
+MyRide.mp4
+you can find some videos with GPX on my YT https://www.youtube.com/watch?v=pLBt1QHeNA0&list=PLyl8qxxibH53DYUZZVSrpSV-Ur99N6ca8
+
+Now Video Synch with GPX, remaining height Meter and Remaning Kilometer of course, update to alternate Computer first with SpeedOmeter.
+Update 12.09.2024 Now OnlineCheck to preverse Lags in getting weather, adjust GPX visuals.
+Download release: 
+https://drive.google.com/file/d/1s9-WUbOcpZ647ec_dSb2cgrdVdkeQYz_/view?usp=sharing
+>>>>>>> 2677299fa0b85c5b8435b6d6e4fa685b73540980
 
 - [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
 - [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
