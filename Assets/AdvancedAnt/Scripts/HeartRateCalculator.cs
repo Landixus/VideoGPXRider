@@ -40,7 +40,7 @@ public class HeartRateCalculator : MonoBehaviour
         hrVals.Add(GameObject.Find("HeartRateDisplay").GetComponent<HeartRateDisplay>().heartRate);
 
         //for Speed
-        if (speedVals.Count > 10)  //Remove the oldest when we have more than 10
+        if (speedVals.Count > 30)  //Remove the oldest when we have more than 10
         {
             speedVals.RemoveAt(0);
         }

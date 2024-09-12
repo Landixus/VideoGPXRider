@@ -120,8 +120,8 @@ public class PrefabDemoDisplay : MonoBehaviour
     public TMP_Text Lay8_EPOC;
 
     public Button openVideoButton;
-  //  public GameObject bikeRider;
-  //  public KeyCode bikeRiderOffOnKey = KeyCode.X;
+    public GameObject bikeRider;
+    public KeyCode bikeRiderOffOnKey = KeyCode.X;
     public KeyCode timerKey;
 
     public GameObject alternateComp;
@@ -186,6 +186,14 @@ public class PrefabDemoDisplay : MonoBehaviour
 
     public GameObject searchBox;
 
+    public Image speedKMH;
+    float speedImage, maxSpeedKMH = 50f;
+
+    public GameObject camera1;
+    public GameObject camera2;
+
+
+
     void Start()
     {
        
@@ -198,6 +206,7 @@ public class PrefabDemoDisplay : MonoBehaviour
         zoneTimers = new float[zoneThresholds.Length];
         inZone = new bool[zoneThresholds.Length];
         zoneTimeAtExit = new float[zoneThresholds.Length];
+        speedImage = maxSpeedKMH;
 
         for (int i = 0; i < zoneTimers.Length; i++)
         {
@@ -212,7 +221,7 @@ public class PrefabDemoDisplay : MonoBehaviour
         }
         UpdateUI();
         lastSwitchTime = Time.time;
-        InvokeRepeating("TakeScreenshot", 0f, 300f); // 300 Sekunden = 5 Minuten
+      //  InvokeRepeating("TakeScreenshot", 0f, 300f); // 300 Sekunden = 5 Minuten
         
         //To make sure to load values weight ftp and device IDs
         ConnectToDevices();
@@ -232,6 +241,10 @@ public class PrefabDemoDisplay : MonoBehaviour
         StartCoroutine(CalculateCalories());
 
         InvokeRepeating("MoverOfStuff", 0f, movetime);
+
+        // Aktiviert die erste Kamera und deaktiviert die zweite
+        camera1.SetActive(true);
+        camera2.SetActive (false);
     }
     
    
@@ -367,10 +380,10 @@ public class PrefabDemoDisplay : MonoBehaviour
         CalculateEPOC();
         hideButton();
 
-       /* if (Input.GetKeyDown(bikeRiderOffOnKey))
+        if (Input.GetKeyDown(bikeRiderOffOnKey))
         {
             bikeRider.SetActive(!bikeRider.activeSelf);
-        }*/
+        }
 
         if (Input.GetKeyDown(alternateComputer))
         {
@@ -423,6 +436,20 @@ public class PrefabDemoDisplay : MonoBehaviour
         {
             ticker.gameObject.SetActive(true);
         }
+
+        speedBarFiller();
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            // Wechselt die Kameras
+            SwitchCameras();
+        }
+    }
+
+    public void speedBarFiller()
+    {
+        speedKMH.fillAmount = fec.speed / maxSpeedKMH;
+        if (fec.speed > maxSpeedKMH) speedKMH.fillAmount = maxSpeedKMH;
     }
     public void CalculateVO2Max()
     {
@@ -909,6 +936,22 @@ public class PrefabDemoDisplay : MonoBehaviour
 
        // LeanTween.move(ticker, ticker.transform.position + new Vector3(-22339f, 0f, 1f), 150f).setDelay(10f);
        
+    }
+
+    // Funktion zum Wechseln der Kameras
+    void SwitchCameras()
+    {
+        // Wenn Kamera 1 aktiviert ist, schalte auf Kamera 2 und umgekehrt
+        if (camera1.activeSelf)
+        {
+            camera1.SetActive(false);
+            camera2.SetActive(true);
+        }
+        else
+        {
+            camera1.SetActive(true);
+            camera2.SetActive(false);
+        }
     }
 
 }

@@ -1,26 +1,39 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using GPX;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(CanvasRenderer))]
 [ExecuteInEditMode]
 public class ElevationMap : Graphic
 {
+    private float[] distances = System.Array.Empty<float>();
+    private float[] elevationGain = System.Array.Empty<float>();
+    private int passedIndex = 0;
+
     public Gradient ElevationColor = new Gradient();
     public float thickness = 10f;
+    public float totalElevationGain = 0f;
 
     public Vector2[] points = { new(0, 0), new(0.5f, 1), new(1, 0) };
-
+    
     public Slider distanceSlider;
     public FitnessEquipmentDisplay fitnessEquipmentDisplay;
 
-   #if UNITY_EDITOR
+    public TMP_Text kilometer_remain;
+    public TMP_Text kilometer_driven;
+    public TMP_Text heightText;
+    public TMP_Text trackHeightMeter;
+    public GPXParser gpxParser;
+
+#if UNITY_EDITOR
     protected override void OnValidate()
-{
-  UpdateGeometry();
-}
+    {
+        UpdateGeometry();
+    }
 #endif
 
-    
     protected override void OnPopulateMesh(VertexHelper vh)
     {
         vh.Clear();
@@ -67,64 +80,111 @@ public class ElevationMap : Graphic
 
     public void Create(GPX.GPX gpx)
     {
-        var points = GPSUtil.Convert(gpx.trk.trkseg);
+        var points = new List<Vector3>(GPSUtil.Convert(gpx.trk.trkseg));
 
         // Store calculated distances (we need them twice)
-        var distances = new float[points.Length];
-        distances[0] = 0f;
+        var distances = new List<float>(points.Count) { 0 };
 
         // Total track length
         float length = 0f;
 
-        // Track elevation range
-        float minElevation = points[0].y;
-        float maxElevation = points[0].y;
-
-        for (int i = 1; i < points.Length; ++i)
+        for (int i = 1; i < points.Count; ++i)
         {
             var p1 = points[i - 1];
             var p2 = points[i];
 
             // Distance ignoring elevation
             float distance = Mathf.Sqrt(Mathf.Pow(p1.x - p2.x, 2) + Mathf.Pow(p1.z - p2.z, 2));
-            distances[i] = distance;
-            length += distance;
 
-            // Update elevation range
-            minElevation = Mathf.Min(minElevation, p2.y);
-            maxElevation = Mathf.Max(maxElevation, p2.y);
+            // Remove overlapping points, keeping the last (assuming it's when GPS stabilized)
+            if (distance < 0.0001f)
+            {
+                points.RemoveAt(i - 1);
+                distances.RemoveAt(i - 1);
+                --i;
+            }
+
+            distances.Add(distance);
+            length += distance;
         }
 
-        this.points = new Vector2[points.Length];
-        float sum = 0f;
-        for (int i = 0; i < points.Length; ++i)
+        // Get elevation range and gain
+        float minElevation = points[0].y;
+        float maxElevation = points[0].y;
+        elevationGain = new float[points.Count];
+        elevationGain[0] = 0f;
+        for (int i = 1; i < points.Count; ++i)
         {
-            sum += distances[i];
-            float x = sum / length;
+            minElevation = Mathf.Min(minElevation, points[i].y);
+            maxElevation = Mathf.Max(maxElevation, points[i].y);
+
+            float elevationDifference = points[i].y - points[i - 1].y;
+            if (elevationDifference > 0) totalElevationGain += elevationDifference;
+            elevationGain[i] = totalElevationGain;
+        }
+
+        // Now you have the total elevation gain
+       // Debug.Log("Total Elevation Gain: " + totalElevationGain + " meters");
+
+        // Store distance sum and normalize points
+        this.points = new Vector2[points.Count];
+        this.distances = new float[points.Count];
+        this.distances[0] = 0f;
+        float distanceSum = 0f;
+        for (int i = 0; i < points.Count; ++i)
+        {
+            distanceSum += distances[i];
+            this.distances[i] = distanceSum;
+            float x = distanceSum / length;
             float y = MathUtils.Map(points[i].y, minElevation, maxElevation, 0, 1);
             this.points[i] = new Vector2(x, y);
         }
+
+        //  trackName.text = gpxParser.trackName.ToString();       
         distanceSlider.maxValue = length;
         UpdateGeometry();
-
+        UnderMapText();
     }
+
     private void Update()
     {
         if (fitnessEquipmentDisplay && fitnessEquipmentDisplay.distanceTraveled < distanceSlider.maxValue)
         {
             float traveled = fitnessEquipmentDisplay.distanceTraveled;
+
+            // Display progress
             distanceSlider.value = distanceSlider.maxValue - traveled;
+
+            // Find the first point that we haven't passed yet
+            for (; passedIndex < distances.Length - 1; ++passedIndex)
+            {
+                if (distances[passedIndex] > traveled) break;
+            }
+            
+            // Fallback to the passed point elevation gain
+            float elevationGain = this.elevationGain[passedIndex];
+            
+            if (passedIndex > 0)
+            {
+                // Lerp between the elevation gain of the two nearest points
+                float percent = MathUtils.Map(traveled, distances[passedIndex - 1], distances[passedIndex], 0, 1);
+                percent = Mathf.Clamp(percent, 0, 1);
+                elevationGain = Mathf.Lerp(this.elevationGain[passedIndex - 1], this.elevationGain[passedIndex], percent);
+            }
+            
+            // Display the elevation gain
+            heightText.text = elevationGain.ToString("F0");
+
+            // Display the traveled distance
+            float drivedKm = (fitnessEquipmentDisplay.distanceTraveled / 1000f);
+            kilometer_driven.text = drivedKm.ToString("F1");
         }
+    }
 
-
-
+    private void UnderMapText()
+    {
+        kilometer_remain.text = (distanceSlider.maxValue / 1000).ToString("F1");
+        trackHeightMeter.text = totalElevationGain.ToString("F0");
+        // trackName.text = trackName.ToString();
     }
 }
-
-
-
-
-
-
-
-

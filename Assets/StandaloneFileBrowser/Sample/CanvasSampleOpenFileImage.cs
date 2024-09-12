@@ -30,8 +30,8 @@ public class CanvasSampleOpenFileImage : MonoBehaviour
         {
             bool hasGpx = false;
 
-            DirectoryInfo root = Directory.GetParent(Application.dataPath);
             // var gpxDirectory = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Overlay_data/gpx"));
+            DirectoryInfo root = Directory.GetParent(Application.dataPath);
             string gpxDirectory = Path.Combine(root.FullName, "Overlay_data/gpx");
             Debug.Log(gpxDirectory);
             Debug.Log($"{name}.gpx");

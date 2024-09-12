@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 using SFB;
 using System.IO;
 using System.Xml;
@@ -71,6 +73,7 @@ namespace GPX
         public double value;
     }
 
+   
     public class GPXParser : MonoBehaviour
     {
         [System.Serializable] public class ImportEvent : UnityEvent<GPX> { }
@@ -82,7 +85,37 @@ namespace GPX
         public ImportEvent OnImport = new ImportEvent();
         public ErrorEvent OnError = new ErrorEvent();
 
+        public TMP_Text trackNameT;
+
+
         public void Import(string path = null)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                var paths = StandaloneFileBrowser.OpenFilePanel("Select GPX File", "", gpxFilter, false);
+                if (paths == null || paths.Length != 1) return;
+                path = paths[0];
+            }
+
+            if (Parse(path, out GPX data))
+            {
+                // Track Name nach erfolgreichem Import verfügbar machen
+                if (data?.trk?.name?.value != null)
+                {
+                    string trackName = data.trk.name.value;
+                    trackNameT.text = trackName;
+                //    Debug.Log($"Track Name: {trackName}");
+                }
+
+                OnImport.Invoke(data);
+            }
+            else
+            {
+                OnError.Invoke();
+            }
+        }
+
+        /* public void Import(string path = null)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -92,7 +125,7 @@ namespace GPX
             }
             if (Parse(path, out GPX data)) OnImport.Invoke(data);
             else OnError.Invoke();
-        }
+        }*/
 
         private bool Parse(string file, out GPX data)
         {

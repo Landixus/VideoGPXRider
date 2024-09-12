@@ -21,7 +21,7 @@ public class VideoSpeed : MonoBehaviour
     public float fecSpeed;
 
     public string pathTotheVideo;
-    // public TMP_InputField inputField;
+   // public TMP_InputField inputField;
     public Button okButton;
     public KeyCode toggleKey = KeyCode.V;
     public KeyCode videoRotate = KeyCode.R;
@@ -37,13 +37,13 @@ public class VideoSpeed : MonoBehaviour
     //For half the Video Speed
     public bool halfSpeed = false;
     public Button VSpeedButton;
-    public Text buttenText;
+    public Text  buttenText;
     public TMP_Text timeText;
 
     //GetTrackLength of GPX
     public ElevationMap elevationMap;
     private float lastCheckTime = 0f;
-    // private float checkInterval = 1f; // Wie oft überprüft wird, z.B. jede Sekunde
+   // private float checkInterval = 1f; // Wie oft überprüft wird, z.B. jede Sekunde
     private float lastDistance = 0f; // Um zu überprüfen, ob sich die Distanz ändert
     public float checkInterval = 1f;
     private float speedMultiplier;
@@ -63,7 +63,7 @@ public class VideoSpeed : MonoBehaviour
         // ...and we set the audio source for this track
         videoPlayer.SetTargetAudioSource(0, audioSource);
         //videoPlayer.url = pathTotheVideo;
-
+        
         //video set to halfSpeed if MotorCam was used
         halfSpeed = false;
 
@@ -78,8 +78,8 @@ public class VideoSpeed : MonoBehaviour
     {
 
         float speed = fec.GetComponent<FitnessEquipmentDisplay>().speed;
-        //  if (motorCam) speed /= 40f;
-        //  else
+      //  if (motorCam) speed /= 40f;
+      //  else
         speed /= 20f;
         videoPlayer.playbackSpeed = speed * speedMultiplier;
 
@@ -207,16 +207,16 @@ public class VideoSpeed : MonoBehaviour
          {
              SetVolume(0f);
          }*/
-
+        
 
         if (halfSpeed)
         {
-
+            
             if (buttenText != null)
             {
                 buttenText.text = "100%";
             }
-
+                       
         }
         if (!halfSpeed)
         {

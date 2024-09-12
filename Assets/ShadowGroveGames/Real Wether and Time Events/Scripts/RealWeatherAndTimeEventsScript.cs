@@ -2,9 +2,11 @@ using ShadowGroveGames.RealWeatherAndTimeEvents.Scripts.Control;
 using ShadowGroveGames.RealWeatherAndTimeEvents.Scripts.OpenWeatherApi;
 using ShadowGroveGames.RealWeatherAndTimeEvents.Scripts.OpenWeatherApi.DTO;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using static ShadowGroveGames.RealWeatherAndTimeEvents.Scripts.OpenWeatherApi.OpenWeatherApiClient;
+
 
 namespace ShadowGroveGames.RealWeatherAndTimeEvents.Scripts
 {
@@ -69,6 +71,7 @@ namespace ShadowGroveGames.RealWeatherAndTimeEvents.Scripts
         /// Threshold for next update tick
         /// </summary>
         private float _nextUpdateInterval = 0;
+        public bool isConnected = false;
 
         private void Awake()
         {
@@ -81,6 +84,24 @@ namespace ShadowGroveGames.RealWeatherAndTimeEvents.Scripts
 
             DontDestroyOnLoad(gameObject);
             Instance = this;
+        }
+
+        
+        private System.Collections.IEnumerator Start()
+        {
+            while (true)
+            {
+                var ping = new Ping("8.8.8.8");
+
+                yield return new WaitForSeconds(90f);
+                while (!ping.isDone)
+                {
+                    isConnected = false;
+                    yield return null;
+                }
+                isConnected = true;
+              //  Debug.Log(ping.time);
+            }
         }
 
         // Start is called before the first frame update
@@ -100,6 +121,9 @@ namespace ShadowGroveGames.RealWeatherAndTimeEvents.Scripts
         // Update is called once per frame
         async void Update()
         {
+         
+            if(isConnected == true) {
+            
             if (_apiClient == null)
                 return;
 
@@ -113,6 +137,7 @@ namespace ShadowGroveGames.RealWeatherAndTimeEvents.Scripts
             }
 
             _nextUpdateInterval -= Time.deltaTime;
+            }
         }
 
         public async Task UpdateWeatherInformation()
