@@ -1,7 +1,25 @@
-# AndreasRouvy
+# VideoGPXRider
+Ride VideoFile with or without GPX, set a transparent Overlay
 
-You need a FEC Device that sends speed to Ride
+How it works!
 
+Unity Version 2021.3.36f1
+
+There are some Projects from GitHub and Unity included in this Project:
+Unity:
+LeanTween
+AdvancedPlayerPrefsWindow
+Github:
+Real Wether and Time Events
+FeedReader
+StandaloneFileBrowser
+
+The MaleCyclist is a Commercial product, so i can not share it.
+You can build your own "RouvyLike" Video Cycling application with it.
+In my Version a FEC Device and a HR Monitor ANT+ is needed. You can code your own, all needed files are included.
+
+Make sure you have the Folder in your application root:
+" YOUR_EXE\Overlay_data\gpx "
 
 If the Video file match the GPX File the Data is shown as an Image on the UI
 Like:
@@ -14,4 +32,8 @@ Update 12.09.2024 Now OnlineCheck to preverse Lags in getting weather, adjust GP
 Download release: 
 https://drive.google.com/file/d/1s9-WUbOcpZ647ec_dSb2cgrdVdkeQYz_/view?usp=sharing
 
+Best use on TV with 1920x1080
+![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/1.png "VideoMode")
+![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/2.png "TransparentMode")
 
+ 
