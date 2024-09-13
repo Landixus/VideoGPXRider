@@ -192,6 +192,9 @@ public class PrefabDemoDisplay : MonoBehaviour
     public GameObject camera1;
     public GameObject camera2;
 
+    public GameObject bike;
+    public GameObject rider;
+
 
 
     void Start()
@@ -946,11 +949,16 @@ public class PrefabDemoDisplay : MonoBehaviour
         {
             camera1.SetActive(false);
             camera2.SetActive(true);
+            bike.gameObject.GetComponent<Animator>().enabled = false;
+            rider.gameObject.GetComponent<Animator>().enabled = false;
+
         }
         else
         {
             camera1.SetActive(true);
             camera2.SetActive(false);
+            bike.gameObject.GetComponent<Animator>().enabled = true;
+            rider.gameObject.GetComponent<Animator>().enabled = true;
         }
     }
 

@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 using ANT_Managed_Library;
@@ -35,6 +37,9 @@ public class HeartRateDisplay : MonoBehaviour {
     private AntChannel backgroundScanChannel;
     private AntChannel deviceChannel;
     public int deviceID = 0; //set this to connect to a specific device ID
+
+    public TMP_Text  HR_Device_Found;
+  
 
     void Start() {
 
@@ -170,6 +175,7 @@ public class HeartRateDisplay : MonoBehaviour {
                     {
                         ConnectToDevice(foundDevice);
                     }
+                    HR_Device_Found.text = "HR(" + foundDevice.deviceNumber.ToString() + ")";
                     break;
                 }
 

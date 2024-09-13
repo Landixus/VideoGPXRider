@@ -12,6 +12,9 @@ public class HeartRateCalculator : MonoBehaviour
     public TMP_Text uiText_Avg_CAD_Value;
     public TMP_Text uiText_Avg_SPEED_Value;
     public TMP_Text AuiText_Avg_SPEED_VALUE;
+    public TMP_Text AuiText_Avg_HR_Value;
+    public TMP_Text AuiText_Avg_PWR_Value;
+    public TMP_Text AuiText_Avg_CAD_Value;
     /*
     private float heartRateFromDevice;
     private int pwrFromDevice;
@@ -40,7 +43,7 @@ public class HeartRateCalculator : MonoBehaviour
         hrVals.Add(GameObject.Find("HeartRateDisplay").GetComponent<HeartRateDisplay>().heartRate);
 
         //for Speed
-        if (speedVals.Count > 30)  //Remove the oldest when we have more than 10
+        if (speedVals.Count > 10000)  //Remove the oldest when we have more than 10
         {
             speedVals.RemoveAt(0);
         }
@@ -52,7 +55,7 @@ public class HeartRateCalculator : MonoBehaviour
         float spd_average = spd_total / (float)speedVals.Count;  //average is of course the total divided by the number of floats
         //
         //for Power
-        if (pwrVals.Count > 10)  //Remove the oldest when we have more than 10
+        if (pwrVals.Count > 10000)  //Remove the oldest when we have more than 10
         {
             pwrVals.RemoveAt(0);
         }
@@ -64,7 +67,7 @@ public class HeartRateCalculator : MonoBehaviour
         float pwr_average = pwr_total / (float)pwrVals.Count;  //average is of course the total divided by the number of floats
         //
         //for Cadence
-        if (cadVals.Count > 10)  //Remove the oldest when we have more than 10
+        if (cadVals.Count > 10000)  //Remove the oldest when we have more than 10
         {
             cadVals.RemoveAt(0);
         }
@@ -77,7 +80,7 @@ public class HeartRateCalculator : MonoBehaviour
         //
         //for Speed
 
-        if (hrVals.Count > 10)  //Remove the oldest when we have more than 10
+        if (hrVals.Count > 10000)  //Remove the oldest when we have more than 10
         {
             hrVals.RemoveAt(0);
         }
@@ -89,8 +92,12 @@ public class HeartRateCalculator : MonoBehaviour
         float hr_average = hr_total / (float)hrVals.Count;  //average is of course the total divided by the number of floats
         //
         AuiText_Avg_SPEED_VALUE.text = spd_average.ToString("F0");
+        AuiText_Avg_PWR_Value.text = pwr_average.ToString("F0");
+        AuiText_Avg_CAD_Value.text = cad_average.ToString("F0");
+        AuiText_Avg_HR_Value.text = hr_average.ToString("F0");
+
+
         uiText_Avg_SPEED_Value.text = (spd_average).ToString("F0");
-        
         uiText_Avg_PWR_Value.text = pwr_average.ToString("F0");
         uiText_Avg_CAD_Value.text = cad_average.ToString("F0");
         uiText_Avg_HR_Value.text = hr_average.ToString("F0");

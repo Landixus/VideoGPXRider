@@ -14,20 +14,23 @@ using UnityEngine.UI;
 
 public class RSSReader : MonoBehaviour
 {
-    [SerializeField] private Text textbox;
+    [SerializeField] private TMP_Text textbox;
     [SerializeField] private Text errorText;
     [SerializeField] private string RSSLocation;
     private bool pulling = false;
     private int waitTime = 5;
+
     // Start is called before the first frame update
 
     // Update is called once per frame
+    [Obsolete]
     void Update()
     {
         if (pulling == false)
             StartCoroutine(getMyFeedData());
     }
 
+    [Obsolete]
     IEnumerator getMyFeedData()
     {
         pulling = true;
@@ -35,10 +38,13 @@ public class RSSReader : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
         pulling = false;
     }
-    
+
+    [Obsolete]
     private IEnumerator getFeedAsString()
     {
         UnityWebRequest uwr = UnityWebRequest.Get(RSSLocation);
+      //  UnityWebRequest uwr = UnityWebRequest.Result.ConnectionError;
+        
         yield return uwr.SendWebRequest();
         if (uwr.isNetworkError || uwr.isHttpError)
         {
@@ -60,7 +66,7 @@ public class RSSReader : MonoBehaviour
             var feedReader = FeedReader.ReadFromString(RSSString); 
             foreach (var item in feedReader.Items)
             {
-                myString += "  ***  " + item.Title /*+ "; Author:" + item.Author + "\n"*/;
+                myString += "  ***  " + item.Title + "; Author:" + item.Author + "\n";
             }
             textbox.text = myString;
         }

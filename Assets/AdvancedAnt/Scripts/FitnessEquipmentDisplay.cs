@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 using ANT_Managed_Library;
@@ -36,6 +38,7 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
 
     public bool autoStartScan = false; //start scan on play
     public bool connected = false; //will be set to true once connected
+      //public TMP_Text FEC_Device_Found;
 
 
 
@@ -64,6 +67,7 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
     private bool request_page_55 = false;
     private bool request_page_71 = false;
     public int deviceID = 0; //set this to connect to a specific device ID
+    public TMP_Text FEC_Device_Found;
     void Start() {
 
         deviceID = PlayerPrefs.GetInt("FEC_Value");
@@ -259,6 +263,7 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
                     {
                            ConnectToDevice(foundDevice);
                     }
+                    FEC_Device_Found.text = "FEC(" +foundDevice.deviceNumber.ToString()+")";
                     break;
                 }
 

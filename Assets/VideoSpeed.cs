@@ -42,9 +42,9 @@ public class VideoSpeed : MonoBehaviour
 
     //GetTrackLength of GPX
     public ElevationMap elevationMap;
-    private float lastCheckTime = 0f;
+  //  private float lastCheckTime = 0f;
    // private float checkInterval = 1f; // Wie oft überprüft wird, z.B. jede Sekunde
-    private float lastDistance = 0f; // Um zu überprüfen, ob sich die Distanz ändert
+  //  private float lastDistance = 0f; // Um zu überprüfen, ob sich die Distanz ändert
     public float checkInterval = 1f;
     private float speedMultiplier;
 

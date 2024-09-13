@@ -61,7 +61,7 @@ namespace ShadowGroveGames.RealWeatherAndTimeEvents.Example
             #endregion
 
             #region Bottom Information
-            _wind.text = $"<b>Wind:</b> {weatherInformation.Wind.SpeedMetersPerHour.ToString("0.00")} mph";
+            _wind.text = $"<b>Wind:</b> {(weatherInformation.Wind.SpeedMetersPerHour *3.6f).ToString("0.00")} Km/h";
             _humidity.text = $"<b>Humidity:</b> {weatherInformation.Main.Humidity} %";
             _pressure.text = $"<b>Pressure:</b> {weatherInformation.Main.Pressure} hPa";
             _visibility.gameObject.SetActive(weatherInformation.Visibility != null);
