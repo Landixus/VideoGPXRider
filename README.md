@@ -29,7 +29,8 @@ you can find some videos with GPX on my YT https://www.youtube.com/watch?v=pLBt1
 
 How i use it:
 I load the course also on my Garmin device, and start the course simultan to the VideoGPXRider, so i have a Strava file uploaded and the Garmin sends the trainer difficutly to Kickr FEC Bike.
-I bet wahoo devices will also work. Explained Video come soon.
+I bet wahoo devices will also work.
+How to load a course to Garmin edge: https://www.youtube.com/watch?v=m_X82njeO8I
 
 Now Video Synch with GPX, remaining height Meter and Remaning Kilometer of course, update to alternate Computer first with SpeedOmeter.
 Update 12.09.2024 Now OnlineCheck to preverse Lags in getting weather, adjust GPX visuals.
