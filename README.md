@@ -32,6 +32,8 @@ I load the course also on my Garmin device, and start the course simultan to the
 I bet wahoo devices will also work.
 How to load a course to Garmin edge: https://www.youtube.com/watch?v=m_X82njeO8I
 
+With "PgUp" you can toggle the transparent mode (Watch a Movie, or TV-Series, or a Cycling Tour Live.
+
 Now Video Synch with GPX, remaining height Meter and Remaning Kilometer of course, update to alternate Computer first with SpeedOmeter.
 Update 12.09.2024 Now OnlineCheck to preverse Lags in getting weather, adjust GPX visuals.
 Download release: 
