@@ -38,9 +38,10 @@ Download release:
 https://drive.google.com/file/d/1s9-WUbOcpZ647ec_dSb2cgrdVdkeQYz_/view?usp=sharing
 
 Best use on TV with 1920x1080
+![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/Overlay_data/screens/gpx_mp4match.png "GPX_MP4_Match")
 ![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/1.png "VideoMode")
 ![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/2.png "TransparentMode")
-![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/Overlay_data/screens/gpx_mp4match.png "GPX_MP4_Match")
+
 
 
  
