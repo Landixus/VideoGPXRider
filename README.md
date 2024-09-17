@@ -36,8 +36,9 @@ With "PgUp" you can toggle the transparent mode (Watch a Movie, or TV-Series, or
 
 Now Video Synch with GPX, remaining height Meter and Remaning Kilometer of course, update to alternate Computer first with SpeedOmeter.
 Update 12.09.2024 Now OnlineCheck to preverse Lags in getting weather, adjust GPX visuals.
+Update 17.09.2024 Better GPX Video synch with automatic reference speed of the video, so you can ride a Video that was in Original faster with slower GPX File.
 Download release: 
-https://drive.google.com/file/d/1s9-WUbOcpZ647ec_dSb2cgrdVdkeQYz_/view?usp=sharing
+https://drive.google.com/file/d/19pzknyEZ9hnNHDkgel3Ewy8B5zuCAHs3/view?usp=sharing
 
 Best use on TV with 1920x1080
 ![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/Overlay_data/screens/gpx_mp4match.png "GPX_MP4_Match")
