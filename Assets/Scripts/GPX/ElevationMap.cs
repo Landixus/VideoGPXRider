@@ -27,6 +27,10 @@ public class ElevationMap : Graphic
     public TMP_Text trackHeightMeter;
     public GPXParser gpxParser;
 
+    public TMP_Text minutesRemain;
+  //  public TMP_Text minutesText;
+
+
 #if UNITY_EDITOR
     protected override void OnValidate()
     {
@@ -77,6 +81,8 @@ public class ElevationMap : Graphic
         vertex.position += new Vector3(0, thickness);
         vh.AddVert(vertex);
     }
+
+
 
     public void Create(GPX.GPX gpx)
     {
@@ -178,6 +184,7 @@ public class ElevationMap : Graphic
             // Display the traveled distance
             float drivedKm = (fitnessEquipmentDisplay.distanceTraveled / 1000f);
             kilometer_driven.text = drivedKm.ToString("F1");
+            timeRemainFunc();
         }
     }
 
@@ -185,6 +192,32 @@ public class ElevationMap : Graphic
     {
         kilometer_remain.text = (distanceSlider.maxValue / 1000).ToString("F1");
         trackHeightMeter.text = totalElevationGain.ToString("F0");
+       
+       
         // trackName.text = trackName.ToString();
     }
+
+    private void timeRemainFunc()
+    {
+        
+
+        // Berechne die verbleibende Distanz
+        float verbleibendeDistanz = distanceSlider.maxValue - fitnessEquipmentDisplay.distanceTraveled;
+
+        // Verbleibende Zeit (in Sekunden) = verbleibende Distanz / aktuelle Geschwindigkeit
+        if (fitnessEquipmentDisplay.speed > 0)
+        {
+            float verbleibendeZeitInSekunden = verbleibendeDistanz / (fitnessEquipmentDisplay.speed * 1000 / 3600);
+
+            // Konvertiere die verbleibende Zeit in Minuten
+            minutesRemain.text = (verbleibendeZeitInSekunden / 60.0f).ToString("F0");
+        }
+        else
+        {
+            minutesRemain.text = 0f.ToString("F0"); // Geschwindigkeit ist 0, also keine Zeit verbleibt
+        }
+    }
+
+
+
 }

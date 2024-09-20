@@ -47,6 +47,7 @@ public class VideoSpeed : MonoBehaviour
   //  private float lastDistance = 0f; // Um zu überprüfen, ob sich die Distanz ändert
     public float checkInterval = 1f;
     private float speedMultiplier;
+    private float referenceSpeed; // get video Length to have a reference speed
 
     private void Start()
     {
@@ -63,11 +64,13 @@ public class VideoSpeed : MonoBehaviour
         // ...and we set the audio source for this track
         videoPlayer.SetTargetAudioSource(0, audioSource);
         //videoPlayer.url = pathTotheVideo;
-        
+
         //video set to halfSpeed if MotorCam was used
         halfSpeed = false;
 
         InvokeRepeating(nameof(AdjustSpeed), 2, checkInterval);
+        InvokeRepeating(nameof(GetRefSpeed), 2, 5);
+
 
 
 
@@ -77,42 +80,18 @@ public class VideoSpeed : MonoBehaviour
     void Update()
     {
 
-        float speed = fec.GetComponent<FitnessEquipmentDisplay>().speed;
-      //  if (motorCam) speed /= 40f;
-      //  else
-        speed /= 20f;
-        videoPlayer.playbackSpeed = speed * speedMultiplier;
-
-        /*
-        // Berechne den Fortschritt der Distanz als Prozentsatz
-        if (elevationMap.distanceSlider.maxValue > 0)
+        if (fec.GetComponent<FitnessEquipmentDisplay>().speed >= 1)
         {
-            float distPercent = fec.distanceTraveled / elevationMap.distanceSlider.maxValue;
-            float expectedVideoTime = (float)(distPercent * videoPlayer.length);
+            float speed = fec.GetComponent<FitnessEquipmentDisplay>().speed;
+            //  if (motorCam) speed /= 40f;
+            //  else
+            //get video length to calculate a reference speed. 
+            speed /= referenceSpeed;
+            videoPlayer.playbackSpeed = speed * speedMultiplier;
 
-            // Überprüfe, wie weit das Video fortgeschritten sein sollte
-            float currentVideoTime = (float)videoPlayer.time;
-            float timeDifference = expectedVideoTime - currentVideoTime;
-
-            // Wenn der Unterschied zu groß ist, passe die Geschwindigkeit an
-            if (Mathf.Abs(timeDifference) > 0.1f) // Toleranz von 0.1 Sekunden
-            {
-                // Ändere die Geschwindigkeit proportional zur Diskrepanz
-                float adjustmentFactor = Mathf.Clamp(timeDifference * 0.5f, -0.5f, 0.5f); // Verhindere extreme Anpassungen
-                videoPlayer.playbackSpeed = 1.0f + adjustmentFactor;
-
-                Debug.Log("Expected Video Time: " + expectedVideoTime);
-                Debug.Log("Current Video Time: " + currentVideoTime);
-                Debug.Log("Time Difference: " + timeDifference);
-                Debug.Log("Adjusted PlayBackSpeed: " + videoPlayer.playbackSpeed);
-            }
-
-            // Speichere den Zeitpunkt des letzten Checks
-            lastCheckTime = Time.time;
-        }*/
-
-        // else
-        // videoPlayer.playbackSpeed = 1;
+          //  Debug.Log("RefSpeed" + referenceSpeed.ToString());
+        }
+       
 
         if (Input.GetKeyDown(videoRotate))
         {
@@ -150,6 +129,9 @@ public class VideoSpeed : MonoBehaviour
         }
     }
 
+  
+
+  
 
     void AdjustSpeed()
     {
@@ -170,6 +152,26 @@ public class VideoSpeed : MonoBehaviour
         {
             speedMultiplier = 1f;
         }
+
+
+    }
+
+    void GetRefSpeed()
+    {
+
+        //if (elevationMap.distanceSlider.maxValue <= 0f) return;
+
+        if (elevationMap.distanceSlider.maxValue > 5f)
+        {
+            // Berechne die verbleibende Zeit
+            referenceSpeed = (elevationMap.distanceSlider.maxValue / (float)videoPlayer.length) * 3.6f;
+        }
+        else
+        {
+            referenceSpeed = 25f;
+        }
+
+      //  CameraVideoScript.GetComponent<VideoSpeed>().enabled = true;
     }
 
     public void SetVolume(float volume)

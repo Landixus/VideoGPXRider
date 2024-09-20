@@ -17,6 +17,7 @@ public class CanvasSampleOpenFileImage : MonoBehaviour
     public GPX.GPXParser gpxParser;
     public ElevationMap elevationMap;
 
+
     public void OnFileSelectButtonDown()
     {
         string[] FilePath = OpenFile();
@@ -43,13 +44,18 @@ public class CanvasSampleOpenFileImage : MonoBehaviour
             }
 
             elevationMap.enabled = hasGpx;
+            
         }
 
 
         if (vp.isPlaying)
             vp.Stop();
         vp.url = "file://" + video;
+
         vp.Play();
+
+        
+
 
     }
     public string[] OpenFile()
@@ -62,6 +68,9 @@ public class CanvasSampleOpenFileImage : MonoBehaviour
         var FilePath = StandaloneFileBrowser.OpenFilePanel("Select Movie File", "", extensions, true);
         return FilePath;
     }
+
+
+    // 
 
     public void ExitApplication()
     {

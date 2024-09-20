@@ -197,6 +197,7 @@ public class PrefabDemoDisplay : MonoBehaviour
 
 
 
+
     void Start()
     {
        
@@ -447,6 +448,8 @@ public class PrefabDemoDisplay : MonoBehaviour
             // Wechselt die Kameras
             SwitchCameras();
         }
+
+      
     }
 
     public void speedBarFiller()
