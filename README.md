@@ -28,17 +28,14 @@ MyRide.mp4
 you can find some videos with GPX on my YT https://www.youtube.com/watch?v=pLBt1QHeNA0&list=PLyl8qxxibH53DYUZZVSrpSV-Ur99N6ca8
 
 How i use it:
-I load the course also on my Garmin device, and start the course simultan to the VideoGPXRider, so i have a Strava file uploaded and the Garmin sends the trainer difficutly to Kickr FEC Bike.
+I load the course also on my Garmin device, and start the course simultan to the VideoGPXRider, so i have a Strava file uploaded and the Garmin sends the trainer difficutly to the FEC Bike.
 I bet wahoo devices will also work.
-How to load a course to Garmin edge: https://www.youtube.com/watch?v=m_X82njeO8I
+Garmin: Select Training > Indoor Trainer. Select Follow a Course to follow a saved course.
 
 With "PgUp" you can toggle the transparent mode (Watch a Movie, or TV-Series, or a Cycling Tour Live.
 
-Now Video Synch with GPX, remaining height Meter and Remaning Kilometer of course, update to alternate Computer first with SpeedOmeter.
-Update 12.09.2024 Now OnlineCheck to preverse Lags in getting weather, adjust GPX visuals.
-Update 17.09.2024 Better GPX Video synch with automatic reference speed of the video, so you can ride a Video that was in Original faster with slower GPX File.
 Download release: 
-https://drive.google.com/file/d/19pzknyEZ9hnNHDkgel3Ewy8B5zuCAHs3/view?usp=sharing
+https://drive.google.com/file/d/1ZZ0jjRwXcNsqiY2s9zokFWONl26ncs9w/view?usp=sharing
 
 Best use on TV with 1920x1080
 ![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/Overlay_data/screens/gpx_mp4match.png "GPX_MP4_Match")
