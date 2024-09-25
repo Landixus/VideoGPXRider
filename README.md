@@ -33,9 +33,9 @@ I bet wahoo devices will also work.
 Garmin: Select Training > Indoor Trainer. Select Follow a Course to follow a saved course.
 
 With "PgUp" you can toggle the transparent mode (Watch a Movie, or TV-Series, or a Cycling Tour Live.
-
+Added VP9 Video Codec support for highest Quality
 Download release: 
-https://drive.google.com/file/d/1ZZ0jjRwXcNsqiY2s9zokFWONl26ncs9w/view?usp=sharing
+https://drive.google.com/file/d/16DTFBAf6TIzyADhZJ5k-J7gCQrZqnfHF/view?usp=sharing
 
 Best use on TV with 1920x1080
 ![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/Overlay_data/screens/gpx_mp4match.png "GPX_MP4_Match")
