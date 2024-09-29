@@ -34,8 +34,9 @@ Garmin: Select Training > Indoor Trainer. Select Follow a Course to follow a sav
 
 With "PgUp" you can toggle the transparent mode (Watch a Movie, or TV-Series, or a Cycling Tour Live.
 Added VP9 Video Codec support for highest Quality
+Added more precise sync between video and gpx file.
 Download release: 
-https://drive.google.com/file/d/16DTFBAf6TIzyADhZJ5k-J7gCQrZqnfHF/view?usp=sharing
+https://drive.google.com/file/d/1npvOF46icSR4-dMr1S0QwbcJokPQtqGP/view?usp=sharing
 
 Best use on TV with 1920x1080
 ![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/Overlay_data/screens/gpx_mp4match.png "GPX_MP4_Match")
