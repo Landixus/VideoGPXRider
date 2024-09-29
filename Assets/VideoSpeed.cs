@@ -11,7 +11,6 @@ using System.Threading;
 
 public class VideoSpeed : MonoBehaviour
 {
-    // 1 = 20Km/h, 2 = 40Km/h, 
     [SerializeField] public VideoPlayer videoPlayer;
 
     public float videoSpeed = 0f;
@@ -21,7 +20,6 @@ public class VideoSpeed : MonoBehaviour
     public float fecSpeed;
 
     public string pathTotheVideo;
-   // public TMP_InputField inputField;
     public Button okButton;
     public KeyCode toggleKey = KeyCode.V;
     public KeyCode videoRotate = KeyCode.R;
@@ -29,8 +27,6 @@ public class VideoSpeed : MonoBehaviour
 
     public AudioSource audioSource;
     public AudioListener audioListener;
-    public GameObject AudioListenerGO;
-    //  public string newVideoURL;
     public KeyCode muteAudio = KeyCode.M;
     private bool muted = false;
 
@@ -42,12 +38,14 @@ public class VideoSpeed : MonoBehaviour
 
     //GetTrackLength of GPX
     public ElevationMap elevationMap;
-  //  private float lastCheckTime = 0f;
-   // private float checkInterval = 1f; // Wie oft überprüft wird, z.B. jede Sekunde
-  //  private float lastDistance = 0f; // Um zu überprüfen, ob sich die Distanz ändert
     public float checkInterval = 1f;
     private float speedMultiplier;
     private float referenceSpeed; // get video Length to have a reference speed
+    private float distanceCalculated = 0f;
+    //  private float speedCalculated = 0f;
+
+    private float updateInterval = 0.25f; // Zeitintervall in Sekunden
+    private float timeSinceLastUpdate = 0f;
 
     private void Start()
     {
@@ -80,16 +78,24 @@ public class VideoSpeed : MonoBehaviour
     void Update()
     {
 
-        if (fec.GetComponent<FitnessEquipmentDisplay>().speed >= 1)
-        {
-            float speed = fec.GetComponent<FitnessEquipmentDisplay>().speed;
-            //  if (motorCam) speed /= 40f;
-            //  else
-            //get video length to calculate a reference speed. 
-            speed /= referenceSpeed;
-            videoPlayer.playbackSpeed = speed * speedMultiplier;
+        timeSinceLastUpdate += Time.deltaTime;
 
-          //  Debug.Log("RefSpeed" + referenceSpeed.ToString());
+        // Überprüfe, ob der Timer das Intervall erreicht hat
+        if (timeSinceLastUpdate >= updateInterval)
+        {
+            // Setze den Timer zurück
+            timeSinceLastUpdate = 0f;
+
+            if (fec.GetComponent<FitnessEquipmentDisplay>().speed >= 1)
+            {
+                float speed = fec.GetComponent<FitnessEquipmentDisplay>().speed;
+                Debug.Log("FECSpeed" + fec.GetComponent<FitnessEquipmentDisplay>().speed);
+                //get video length to calculate a reference speed. 
+                speed /= referenceSpeed;
+                videoPlayer.playbackSpeed = speed * speedMultiplier;
+
+                //  Debug.Log("RefSpeed" + referenceSpeed.ToString());
+            }
         }
        
 
@@ -127,6 +133,15 @@ public class VideoSpeed : MonoBehaviour
             // Setze den Text des UI-Textfeldes
             timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
         }
+
+        float distanceThisFrame = (fec.GetComponent<FitnessEquipmentDisplay>().speed /3.6f) * Time.deltaTime;
+
+        // Addiere die Distanz zum Gesamtwert
+        distanceCalculated += distanceThisFrame;
+
+        // Optional: Die Distanz in der Konsole ausgeben
+       // Debug.Log("Zurückgelegte Distanz: " + distanceCalculated + " Meter");
+
     }
 
   
@@ -138,15 +153,20 @@ public class VideoSpeed : MonoBehaviour
         // Only execute if the GPX exists and track length has been stored in the distance slider
         if (elevationMap.distanceSlider.maxValue <= 0f) return;
         // Get the percentage we've travelled
-        float distPercent = fec.distanceTraveled / elevationMap.distanceSlider.maxValue;
+     //   float distPercent = fec.distanceTraveled / elevationMap.distanceSlider.maxValue;
+        float distPercent = distanceCalculated / elevationMap.distanceSlider.maxValue;
         // Get the time of the video that matches the travel distance
         float expectedVideoTime = (float)(distPercent * videoPlayer.length);
         // If the time doesn't match, we speed the video up/down
-        float timeDifference = expectedVideoTime - (float)videoPlayer.time;
+        float timeDifference = (expectedVideoTime - (float)videoPlayer.time) ;
+      //  Debug.Log("Time Dif: " + timeDifference + " seconds");
+      //  Debug.Log("ExpVT: " + expectedVideoTime + " seconds");
+      //  Debug.Log("ExpVT: " + distPercent + " dis%");
         if (Mathf.Abs(timeDifference) > 0.1f)
         {
             speedMultiplier = MathUtils.Map(timeDifference, -10, 10, 0.9f, 1.1f);
             speedMultiplier = Mathf.Clamp(speedMultiplier, 0.9f, 1.1f);
+          //  Debug.Log("SpeMulti: " + speedMultiplier + " dis%");
         }
         else
         {
@@ -159,19 +179,17 @@ public class VideoSpeed : MonoBehaviour
     void GetRefSpeed()
     {
 
-        //if (elevationMap.distanceSlider.maxValue <= 0f) return;
-
         if (elevationMap.distanceSlider.maxValue > 5f)
         {
             // Berechne die verbleibende Zeit
             referenceSpeed = (elevationMap.distanceSlider.maxValue / (float)videoPlayer.length) * 3.6f;
+            Debug.Log("refSpeed" + referenceSpeed);
         }
         else
         {
             referenceSpeed = 25f;
         }
 
-      //  CameraVideoScript.GetComponent<VideoSpeed>().enabled = true;
     }
 
     public void SetVolume(float volume)
@@ -201,16 +219,7 @@ public class VideoSpeed : MonoBehaviour
 
     public void SetVideoSpeed50()
     {
-        /* if (halfSpeed == false)
-         {
-             halfSpeed = true;
-         }
-         else
-         {
-             SetVolume(0f);
-         }*/
-        
-
+      
         if (halfSpeed)
         {
             
@@ -234,22 +243,4 @@ public class VideoSpeed : MonoBehaviour
 
     }
 
-    /*
-    private void ToggleInputField()
-    {
-        inputField.gameObject.SetActive(!inputField.gameObject.activeSelf);
-        okButton.gameObject.SetActive(!okButton.gameObject.activeSelf);
-    }
-    */
-    /*
-    public void ChangeVideoURL()
-    {
-
-        if (!string.IsNullOrEmpty(newVideoURL))
-        {
-            videoPlayer.Stop();
-            videoPlayer.url = newVideoURL;
-            videoPlayer.Play();
-        }
-    }*/
 }

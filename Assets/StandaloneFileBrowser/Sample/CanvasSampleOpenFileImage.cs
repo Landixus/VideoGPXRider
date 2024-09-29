@@ -34,8 +34,8 @@ public class CanvasSampleOpenFileImage : MonoBehaviour
             // var gpxDirectory = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "Overlay_data/gpx"));
             DirectoryInfo root = Directory.GetParent(Application.dataPath);
             string gpxDirectory = Path.Combine(root.FullName, "Overlay_data/gpx");
-            Debug.Log(gpxDirectory);
-            Debug.Log($"{name}.gpx");
+       //     Debug.Log(gpxDirectory);
+       //     Debug.Log($"{name}.gpx");
             foreach (string file in Directory.EnumerateFiles(gpxDirectory, $"{name}.gpx", SearchOption.AllDirectories))
             {
                 gpxParser.Import(file);

@@ -196,8 +196,6 @@ public class PrefabDemoDisplay : MonoBehaviour
     public GameObject rider;
 
 
-
-
     void Start()
     {
        
@@ -876,12 +874,6 @@ public class PrefabDemoDisplay : MonoBehaviour
             }
         }
         else  return;
-
-            // bgImageWatt.color = Color.green;
-            //zone watt = (= <55) (2= 55-75) (3= 75-90) (4= 90-105) (5= 105-120) (6= 120-130) (7= > 130)
-            //zones hr = (1= 50-60) (2= 60-70) (3= 70-80) (4= 80-90) (5= 90-100)
-             
-
 
     }
 

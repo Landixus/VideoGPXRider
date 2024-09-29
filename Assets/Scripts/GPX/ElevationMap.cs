@@ -28,8 +28,9 @@ public class ElevationMap : Graphic
     public GPXParser gpxParser;
 
     public TMP_Text minutesRemain;
-  //  public TMP_Text minutesText;
-
+    //  public TMP_Text minutesText;
+    private float distanceCalculated;
+    
 
 #if UNITY_EDITOR
     protected override void OnValidate()
@@ -156,7 +157,12 @@ public class ElevationMap : Graphic
     {
         if (fitnessEquipmentDisplay && fitnessEquipmentDisplay.distanceTraveled < distanceSlider.maxValue)
         {
-            float traveled = fitnessEquipmentDisplay.distanceTraveled;
+           // float traveled = fitnessEquipmentDisplay.distanceTraveled;
+            float distanceThisFrame = (fitnessEquipmentDisplay.GetComponent<FitnessEquipmentDisplay>().speed / 3.6f) * Time.deltaTime;
+
+            // Addiere die Distanz zum Gesamtwert
+            distanceCalculated += distanceThisFrame;
+            float traveled = distanceCalculated;
 
             // Display progress
             distanceSlider.value = distanceSlider.maxValue - traveled;
@@ -182,7 +188,7 @@ public class ElevationMap : Graphic
             heightText.text = elevationGain.ToString("F0");
 
             // Display the traveled distance
-            float drivedKm = (fitnessEquipmentDisplay.distanceTraveled / 1000f);
+            float drivedKm = distanceCalculated / 1000f; // (fitnessEquipmentDisplay.distanceTraveled / 1000f);
             kilometer_driven.text = drivedKm.ToString("F1");
             timeRemainFunc();
         }
@@ -199,10 +205,10 @@ public class ElevationMap : Graphic
 
     private void timeRemainFunc()
     {
-        
+
 
         // Berechne die verbleibende Distanz
-        float verbleibendeDistanz = distanceSlider.maxValue - fitnessEquipmentDisplay.distanceTraveled;
+        float verbleibendeDistanz = distanceSlider.maxValue - distanceCalculated; // fitnessEquipmentDisplay.distanceTraveled;
 
         // Verbleibende Zeit (in Sekunden) = verbleibende Distanz / aktuelle Geschwindigkeit
         if (fitnessEquipmentDisplay.speed > 0)
