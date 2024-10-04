@@ -195,6 +195,19 @@ public class PrefabDemoDisplay : MonoBehaviour
     public GameObject bike;
     public GameObject rider;
 
+    /*private List<float> powerData = new List<float>();
+    public LineRenderer lineRenderer;
+    public Gradient colorGradient; // Ein Gradient, der die Farben für die Zonen enthält
+    private float xOffset = 0.5f; // Der Abstand zwischen den Punkten
+    private int maxPoints = 100;  // Maximal anzuzeigende Punkte
+    */
+
+  //  private float elapsedTime = 0f;  // Zeit in Sekunden
+    private float totalTSS = 0f;     // Gesamt-TSS
+    public TMP_Text tssDisplay;          // UI-Element für die TSS-Anzeige
+
+    private List<float> powerData = new List<float>();  // Liste zur Speicherung der Leistungsdaten
+    public int averagingInterval = 30; // Gleitender Durchschnitt über 30 Sekunden
 
     void Start()
     {
@@ -247,6 +260,12 @@ public class PrefabDemoDisplay : MonoBehaviour
         // Aktiviert die erste Kamera und deaktiviert die zweite
         camera1.SetActive(true);
         camera2.SetActive (false);
+
+        //  lineRenderer = GetComponent<LineRenderer>();
+        //  lineRenderer.positionCount = 0; // Starte ohne Punkte
+
+        totalTSS = 0f;
+
     }
     
    
@@ -402,7 +421,8 @@ public class PrefabDemoDisplay : MonoBehaviour
 
         }
 
-        if (Input.GetKeyDown(timerKey))
+        if(t_speed > 0.1) 
+        //if (Input.GetKeyDown(timerKey))
         {
             gamePaused = !gamePaused;
         
@@ -447,7 +467,34 @@ public class PrefabDemoDisplay : MonoBehaviour
             SwitchCameras();
         }
 
-      
+        CollectPowerData(t_power);
+
+        // Berechne die Normalized Power
+        float normalizedPower = CalculateNormalizedPower();
+
+        // Berechne den aktuellen TSS-Wert basierend auf der Normalized Power und der FTP
+        totalTSS = CalculateTSS(normalizedPower, ftpValue, gameTimer);
+
+        // Optional: TSS im UI anzeigen
+        if (tssDisplay != null)
+        {
+            tssDisplay.text = totalTSS.ToString("F0");
+        }
+
+        // Beispiel: Neue Leistungsdaten hinzufügen (in einem echten Fall kommen diese von einem Sensor)
+        /*   float newPower = GetPowerData();
+           powerData.Add(newPower);
+
+           // Begrenze die Anzahl der Punkte in der Liste
+           if (powerData.Count > maxPoints)
+           {
+               powerData.RemoveAt(0);
+           }
+
+           // Update die Power-Grafik
+           UpdatePowerGraph();
+   */
+
     }
 
     public void speedBarFiller()
@@ -957,10 +1004,104 @@ public class PrefabDemoDisplay : MonoBehaviour
         }
     }
 
+    // Methode zur Berechnung der Normalized Power
+    float CalculateNormalizedPower()
+    {
+        if (powerData.Count < averagingInterval)
+        {
+            return 0f;  // Zu wenige Daten für die Berechnung eines 30-Sekunden-Durchschnitts
+        }
+
+        // Berechne den gleitenden 30-Sekunden-Durchschnitt (Beachte: nur die letzten 30 Sekunden verwenden)
+        List<float> last30SecondsPower = powerData.GetRange(powerData.Count - averagingInterval, averagingInterval);
+
+        // Berechne die 4. Potenz des Durchschnitts jeder Leistung
+        float avgPower4th = 0f;
+        foreach (float power in last30SecondsPower)
+        {
+            avgPower4th += Mathf.Pow(power, 4);
+        }
+
+        avgPower4th /= averagingInterval;
+
+        // Berechne die Normalized Power (4. Wurzel des Durchschnitts der 4. Potenz)
+        float normalizedPower = Mathf.Pow(avgPower4th, 0.25f);
+
+        return normalizedPower;
+    }
+
+    // Methode zur Berechnung des TSS-Werts
+    float CalculateTSS(float NP, float FTP, float timeInSeconds)
+    {
+        float IF = NP / FTP;  // Intensitätsfaktor
+        float timeInHours = timeInSeconds / 3600f;  // Zeit in Stunden umrechnen
+        float TSS = (timeInHours * NP * IF) / FTP * 100;
+        return TSS;
+    }
+
+    // Methode zur Sammlung der Leistungsdaten in jedem Frame
+    void CollectPowerData(float power)
+    {
+        // Neue Leistungsdaten zur Liste hinzufügen
+        powerData.Add(power);
+
+        // Um Speicher zu sparen, nur die letzten 30 Sekunden an Daten behalten
+        if (powerData.Count > averagingInterval)
+        {
+            powerData.RemoveAt(0);  // Entfernt älteste Einträge
+        }
+    }
+
+    /*
+    float GetPowerData()
+    {
+
+        return t_power;
+    }
+
+    void UpdatePowerGraph()
+    {
+        lineRenderer.positionCount = powerData.Count;
+
+        for (int i = 0; i < powerData.Count; i++)
+        {
+            float power = powerData[i];
+            Vector3 pos = new Vector3(i * xOffset, power / ftpValue, 0); // x und y-Wert der Linie
+            lineRenderer.SetPosition(i, pos);
+
+            // Berechne den Farbanteil basierend auf der aktuellen Power und dem FTP
+            float relativePower = power / ftpValue;
+            Color color = GetColorForPower(relativePower);
+            lineRenderer.startColor = color;
+            lineRenderer.endColor = color;
+        }
+    }
+    */
+    /*
+    Color GetColorForPower(float relativePower)
+    {
+        // Berechne den Farbwert basierend auf den 7 FTP-Zonen
+        if (relativePower < 0.55f)
+            return Color.blue; // Zone 1: Erholung (Blau)
+        else if (relativePower < 0.75f)
+            return Color.green; // Zone 2: Ausdauer (Grün)
+        else if (relativePower < 0.90f)
+            return Color.yellow; // Zone 3: Tempo (Gelb)
+        else if (relativePower < 1.05f)
+            return new Color(1.0f, 0.64f, 0.0f); // Zone 4: Schwellenleistung (Orange)
+        else if (relativePower < 1.20f)
+            return Color.red; // Zone 5: VO2 Max (Rot)
+        else if (relativePower < 1.50f)
+            return Color.magenta; // Zone 6: Anaerobe Kapazität (Magenta)
+        else
+            return new Color(0.5f, 0.0f, 0.0f); // Zone 7: Neuromuskulär (Dunkelrot)
+    }
+    */
 }
 
 
-    
+
+
 
 
 
