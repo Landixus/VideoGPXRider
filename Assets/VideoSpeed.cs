@@ -89,7 +89,7 @@ public class VideoSpeed : MonoBehaviour
             if (fec.GetComponent<FitnessEquipmentDisplay>().speed >= 1)
             {
                 float speed = fec.GetComponent<FitnessEquipmentDisplay>().speed;
-                Debug.Log("FECSpeed" + fec.GetComponent<FitnessEquipmentDisplay>().speed);
+           //     Debug.Log("FECSpeed" + fec.GetComponent<FitnessEquipmentDisplay>().speed);
                 //get video length to calculate a reference speed. 
                 speed /= referenceSpeed;
                 videoPlayer.playbackSpeed = speed * speedMultiplier;
@@ -183,7 +183,7 @@ public class VideoSpeed : MonoBehaviour
         {
             // Berechne die verbleibende Zeit
             referenceSpeed = (elevationMap.distanceSlider.maxValue / (float)videoPlayer.length) * 3.6f;
-            Debug.Log("refSpeed" + referenceSpeed);
+          //      Debug.Log("refSpeed" + referenceSpeed);
         }
         else
         {

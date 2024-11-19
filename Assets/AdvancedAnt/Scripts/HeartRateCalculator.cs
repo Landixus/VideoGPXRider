@@ -15,6 +15,11 @@ public class HeartRateCalculator : MonoBehaviour
     public TMP_Text AuiText_Avg_HR_Value;
     public TMP_Text AuiText_Avg_PWR_Value;
     public TMP_Text AuiText_Avg_CAD_Value;
+
+    public TMP_Text AuiText_MAX_SPEED_VALUE;
+    public TMP_Text AuiText_MAX_HR_Value;
+    public TMP_Text AuiText_MAX_PWR_Value;
+    public TMP_Text AuiText_MAX_CAD_Value;
     /*
     private float heartRateFromDevice;
     private int pwrFromDevice;
@@ -28,7 +33,10 @@ public class HeartRateCalculator : MonoBehaviour
     public List<float> pwrVals = new List<float>();
     public List<float> cadVals = new List<float>();
     public List<float> hrVals = new List<float>();
-  
+
+    public float hr_average;
+
+
 
     private void Start()
     {
@@ -42,55 +50,72 @@ public class HeartRateCalculator : MonoBehaviour
         cadVals.Add(GameObject.Find("FitnessEquipmentDisplay").GetComponent<FitnessEquipmentDisplay>().cadence);
         hrVals.Add(GameObject.Find("HeartRateDisplay").GetComponent<HeartRateDisplay>().heartRate);
 
-        //for Speed
-        if (speedVals.Count > 10000)  //Remove the oldest when we have more than 10
+        if (speedVals.Count > 10000)
         {
             speedVals.RemoveAt(0);
         }
         float spd_total = 0f;
-        foreach (float f in speedVals)  //Calculate the total of all floats
+        float maxSpeed = float.MinValue; // Initialisiere mit dem kleinstmöglichen Wert
+        foreach (float f in speedVals)
         {
             spd_total += f;
+            if (f > maxSpeed)
+            {
+                maxSpeed = f; // Aktualisiere den größten Wert
+            }
         }
-        float spd_average = spd_total / (float)speedVals.Count;  //average is of course the total divided by the number of floats
-        //
-        //for Power
-        if (pwrVals.Count > 10000)  //Remove the oldest when we have more than 10
+        float spd_average = spd_total / (float)speedVals.Count;
+
+        // Handling for Power
+        if (pwrVals.Count > 10000)
         {
             pwrVals.RemoveAt(0);
         }
         float pwr_total = 0f;
-        foreach (float f in pwrVals)  //Calculate the total of all floats
+        float maxPower = float.MinValue;
+        foreach (float f in pwrVals)
         {
             pwr_total += f;
+            if (f > maxPower)
+            {
+                maxPower = f;
+            }
         }
-        float pwr_average = pwr_total / (float)pwrVals.Count;  //average is of course the total divided by the number of floats
-        //
-        //for Cadence
-        if (cadVals.Count > 10000)  //Remove the oldest when we have more than 10
+        float pwr_average = pwr_total / (float)pwrVals.Count;
+
+        // Handling for Cadence
+        if (cadVals.Count > 10000)
         {
             cadVals.RemoveAt(0);
         }
         float cad_total = 0f;
-        foreach (float f in cadVals)  //Calculate the total of all floats
+        float maxCadence = float.MinValue;
+        foreach (float f in cadVals)
         {
             cad_total += f;
+            if (f > maxCadence)
+            {
+                maxCadence = f;
+            }
         }
-        float cad_average = cad_total / (float)cadVals.Count;  //average is of course the total divided by the number of floats
-        //
-        //for Speed
+        float cad_average = cad_total / (float)cadVals.Count;
 
-        if (hrVals.Count > 10000)  //Remove the oldest when we have more than 10
+        // Handling for Heart Rate
+        if (hrVals.Count > 10000)
         {
             hrVals.RemoveAt(0);
         }
         float hr_total = 0f;
-        foreach (float f in hrVals)  //Calculate the total of all floats
+        float maxHeartRate = float.MinValue;
+        foreach (float f in hrVals)
         {
             hr_total += f;
+            if (f > maxHeartRate)
+            {
+                maxHeartRate = f;
+            }
         }
-        float hr_average = hr_total / (float)hrVals.Count;  //average is of course the total divided by the number of floats
-        //
+        hr_average = hr_total / (float)hrVals.Count;
         AuiText_Avg_SPEED_VALUE.text = spd_average.ToString("F0");
         AuiText_Avg_PWR_Value.text = pwr_average.ToString("F0");
         AuiText_Avg_CAD_Value.text = cad_average.ToString("F0");
@@ -101,11 +126,19 @@ public class HeartRateCalculator : MonoBehaviour
         uiText_Avg_PWR_Value.text = pwr_average.ToString("F0");
         uiText_Avg_CAD_Value.text = cad_average.ToString("F0");
         uiText_Avg_HR_Value.text = hr_average.ToString("F0");
-        
 
-    //   Debug.Log("Status :"+status );
+        AuiText_MAX_SPEED_VALUE.text = maxSpeed.ToString("F0");
+        AuiText_MAX_PWR_Value.text = maxPower.ToString("F0");
+        AuiText_MAX_CAD_Value.text = maxCadence.ToString("F0");
+        AuiText_MAX_HR_Value.text = maxHeartRate.ToString("F0");
+
+
+        //   Debug.Log("Status :"+status );
     }
 
-    
+
+
+
+
 
 }

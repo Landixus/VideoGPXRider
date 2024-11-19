@@ -153,7 +153,7 @@ public class HeartRateDisplay : MonoBehaviour {
 
             case AntplusDeviceType.HeartRate: {
                     int deviceNumber = (data[10]) | data[11] << 8;
-                    //deviceID = PlayerPrefs.GetInt("HR_Value");
+                    deviceID = PlayerPrefs.GetInt("HR_Value");
                     //int deviceNumber = deviceID;
                     byte transType = data[13];
                     foreach (AntDevice d in scanResult) {

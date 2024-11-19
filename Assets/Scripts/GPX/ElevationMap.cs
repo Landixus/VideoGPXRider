@@ -9,6 +9,7 @@ using System.Collections.Generic;
 public class ElevationMap : Graphic
 {
     private float[] distances = System.Array.Empty<float>();
+    private float[] elevation = System.Array.Empty<float>();
     private float[] elevationGain = System.Array.Empty<float>();
     private int passedIndex = 0;
 
@@ -30,7 +31,8 @@ public class ElevationMap : Graphic
     public TMP_Text minutesRemain;
     //  public TMP_Text minutesText;
     private float distanceCalculated;
-    
+    public TMP_Text percentSlope;
+
 
 #if UNITY_EDITOR
     protected override void OnValidate()
@@ -116,12 +118,18 @@ public class ElevationMap : Graphic
         }
 
         // Get elevation range and gain
+        elevation = new float[points.Count];
+        elevation[0] = points[0].y;
+
         float minElevation = points[0].y;
         float maxElevation = points[0].y;
         elevationGain = new float[points.Count];
         elevationGain[0] = 0f;
+        
         for (int i = 1; i < points.Count; ++i)
         {
+            elevation[i] = points[i].y;
+
             minElevation = Mathf.Min(minElevation, points[i].y);
             maxElevation = Mathf.Max(maxElevation, points[i].y);
 
@@ -191,6 +199,7 @@ public class ElevationMap : Graphic
             float drivedKm = distanceCalculated / 1000f; // (fitnessEquipmentDisplay.distanceTraveled / 1000f);
             kilometer_driven.text = drivedKm.ToString("F1");
             timeRemainFunc();
+            GetSlope();
         }
     }
 
@@ -224,6 +233,16 @@ public class ElevationMap : Graphic
         }
     }
 
-
-
+    public float GetSlope()
+    {
+        // Use the passed index as the current target point, and calculate the slope percentage from the point before to target
+        // Slope percentage is: rise (elevation difference in meters) / run (distance difference in meters)
+        int i = Mathf.Max(passedIndex, 1);
+        float deltaElevation = elevation[i] - elevation[i - 1];
+        float deltaDistance = distances[i] - distances[i - 1];
+      //  Debug.Log("Slope" + (deltaElevation / deltaDistance) * 100);
+        percentSlope.text = ((deltaElevation / deltaDistance) * 100).ToString("F1");
+        return (deltaElevation / deltaDistance) * 100;
+       
+    }
 }

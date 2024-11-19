@@ -6,58 +6,72 @@ using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using DentedPixel;
+using UnityEditor;
 
 
 
 public class PrefabDemoDisplay : MonoBehaviour
 {
-    public TMP_Text uiText_Speed;
-    public TMP_Text uiText_Cad;
-    public TMP_Text uiText_Pwr;
-    public TMP_Text uiText_Hr;
-    public TMP_Text uiText_Aer;
-    public TMP_Text uiText_AnAer;
+    #region TextFields
+    [Categorized, HideInInspector] public TMP_Text uiText_Speed;
+    [Categorized, HideInInspector] public TMP_Text uiText_Cad;
+    [Categorized, HideInInspector] public TMP_Text uiText_Pwr;
+    [Categorized, HideInInspector] public TMP_Text uiText_Hr;
+    [Categorized, HideInInspector] public TMP_Text uiText_Aer;
+    [Categorized, HideInInspector] public TMP_Text uiText_AnAer;
+    [Categorized, HideInInspector] public TMP_Text Lay3_uiText_Speed;
+    [Categorized, HideInInspector] public TMP_Text Lay3_uiText_Cad;
+    [Categorized, HideInInspector] public TMP_Text Lay3_uiText_Pwr;
+    [Categorized, HideInInspector] public TMP_Text Lay3_uiText_Hr;
+    [Categorized, HideInInspector] public TMP_Text Lay4_uiText_Speed;
+    [Categorized, HideInInspector] public TMP_Text Lay4_uiText_Cad;
+    [Categorized, HideInInspector] public TMP_Text Lay4_uiText_Pwr;
+    [Categorized, HideInInspector] public TMP_Text Lay4_uiText_Hr;
+    [Categorized, HideInInspector] public TMP_Text Lay5_uiText_Pwr;
+    [Categorized, HideInInspector] public TMP_Text Lay6_uiText_Speed;
+    [Categorized, HideInInspector] public TMP_Text Lay6_uiText_Cad;
+    [Categorized, HideInInspector] public TMP_Text Lay6_uiText_Pwr;
+    [Categorized, HideInInspector] public TMP_Text Lay6_uiText_Hr;
+    [Categorized, HideInInspector] public TMP_Text Lay6_WKG;
+    [Categorized, HideInInspector] public TMP_Text maxPowerText;
+    [Categorized, HideInInspector] public TMP_Text maxCadenceText;
+    [Categorized, HideInInspector] public TMP_Text maxSpeedText;
+    [Categorized, HideInInspector] public TMP_Text maxHeartRateText;
+    [Categorized, HideInInspector] public TMP_Text uiText_SysTime;
+    [Categorized("Time"), HideInInspector] public TMP_Text m_gameTime;
+    [Categorized, HideInInspector] public TMP_Text Lay4_m_gameTime;
+    [Categorized, HideInInspector] public TMP_Text Lay8_EPOC;
+    [Categorized, HideInInspector] public TMP_Text Lay_Calories_KCAL;
+    [Categorized, HideInInspector] public TMP_Text Lay8_Distance;
+    [Categorized, HideInInspector] public TMP_Text AuiText_Speed;
+    [Categorized, HideInInspector] public TMP_Text AuiText_Cad;
+    [Categorized, HideInInspector] public TMP_Text AuiText_Pwr;
+    [Categorized, HideInInspector] public TMP_Text AuiText_Hr;
+    [Categorized, HideInInspector] public TMP_Text AuiText_MoveTime;
+    [Categorized, HideInInspector] public TMP_Text AuiText_Slope;
+    [Categorized, HideInInspector] public TMP_Text AuiText_Calc;
+    [Categorized, HideInInspector] public TMP_Text AuiText_Distance;
+    [Categorized, HideInInspector] public TMP_Text AuiText_WKG;
+    [Categorized, HideInInspector] public TMP_Text wattoMeterText;
+    [Categorized, HideInInspector] public TMP_Text hrMeterText;
+    [Categorized, HideInInspector] public TMP_Text tssDisplay;          // UI-Element für die TSS-Anzeige
+    [Categorized, HideInInspector] public TMP_Text switchValueText;
+    #endregion
 
-    public TMP_Text Lay3_uiText_Speed;
-    public TMP_Text Lay3_uiText_Cad;
-    public TMP_Text Lay3_uiText_Pwr;
-    public TMP_Text Lay3_uiText_Hr;
-
-    public TMP_Text Lay4_uiText_Speed;
-    public TMP_Text Lay4_uiText_Cad;
-    public TMP_Text Lay4_uiText_Pwr;
-    public TMP_Text Lay4_uiText_Hr;
-
-    public TMP_Text Lay5_uiText_Pwr;
-
-    public TMP_Text Lay6_uiText_Speed;
-    public TMP_Text Lay6_uiText_Cad;
-    public TMP_Text Lay6_uiText_Pwr;
-    public TMP_Text Lay6_uiText_Hr;
-    public TMP_Text Lay6_WKG;
-
-    public TMP_Text maxPowerText;
-    public TMP_Text maxCadenceText;
-    public TMP_Text maxSpeedText;
-    public TMP_Text maxHeartRateText;
-
-    //Texts for WattoMeter and HrMEter
-    public TMP_Text WattoMetermaxPowerText;
-    public TMP_Text HrMetermaxHeartRateText;
 
     private int maxPower = 0;
     private float maxCadence = 0;
     private float maxSpeed = 0f;
     private float maxHeartRateUI = 0;
 
-    public TMP_Text switchValueText;
+   
     public float switchInterval = 5f; // Switch interval in seconds
     private int currentDisplayIndex = 0;
     private string[] displayOptions = { "Pwr", "Cad", "Spd", "Hr" };
 
     private float lastSwitchTime;
 
-    public TMP_Text uiText_SysTime;
+   
 
     public HeartRateCalculator heartRateCalculator;
     //  public GameObject BikeTrainerButtons;
@@ -93,12 +107,10 @@ public class PrefabDemoDisplay : MonoBehaviour
     public float seconds;
     public float minutes;
     public float gameTimer;
-    public TMP_Text m_gameTime;
-    public TMP_Text Lay4_m_gameTime;
+   
     public bool gamePaused = true;
 
-    public TMP_Text Lay_Calories_KCAL;
-    public TMP_Text Lay8_Distance;
+   
 
     public FitnessEquipmentDisplay fec;
     public HeartRateDisplay hr;
@@ -117,8 +129,7 @@ public class PrefabDemoDisplay : MonoBehaviour
     public string gender; // Geschlecht (z.B. "männlich" oder "weiblich")
 
     private float epocValue;
-    public TMP_Text Lay8_EPOC;
-
+  
     public Button openVideoButton;
     public GameObject bikeRider;
     public KeyCode bikeRiderOffOnKey = KeyCode.X;
@@ -129,6 +140,8 @@ public class PrefabDemoDisplay : MonoBehaviour
     public GameObject lowerLeftComp;
     public KeyCode alternateComputer = KeyCode.Y;
     public KeyCode lowerLeftComputer = KeyCode.Q;
+    public KeyCode PowerGraphKey = KeyCode.G;
+    public GameObject powerGraph;
     public GameObject nextB;
     public GameObject prevB;
     public GameObject OnOffB;
@@ -146,16 +159,7 @@ public class PrefabDemoDisplay : MonoBehaviour
     public int screenshotCount = 0;
 
     //Alternate Computer
-    public TMP_Text AuiText_Speed;
-    public TMP_Text AuiText_Cad;
-    public TMP_Text AuiText_Pwr;
-    public TMP_Text AuiText_Hr;
-    public TMP_Text AuiText_MoveTime;
-    public TMP_Text AuiText_Slope;
-    public TMP_Text AuiText_Calc;
-    public TMP_Text AuiText_Distance;
-    //public TMP_Text AuiText_AvgSpeed;
-    public TMP_Text AuiText_WKG;
+   
 
 
     public Image[] zoneImages; // Array der Bilder für die Zonen
@@ -172,8 +176,7 @@ public class PrefabDemoDisplay : MonoBehaviour
 
     public Slider wattometer;
     public Slider hrMeter;
-    public TMP_Text wattoMeterText;
-    public TMP_Text hrMeterText;
+  
     public Color backgroundColorWattoMeter = Color.blue;
 
     //Alternate2
@@ -195,6 +198,8 @@ public class PrefabDemoDisplay : MonoBehaviour
     public GameObject bike;
     public GameObject rider;
 
+
+
     /*private List<float> powerData = new List<float>();
     public LineRenderer lineRenderer;
     public Gradient colorGradient; // Ein Gradient, der die Farben für die Zonen enthält
@@ -203,11 +208,17 @@ public class PrefabDemoDisplay : MonoBehaviour
     */
 
   //  private float elapsedTime = 0f;  // Zeit in Sekunden
-    private float totalTSS = 0f;     // Gesamt-TSS
-    public TMP_Text tssDisplay;          // UI-Element für die TSS-Anzeige
+  //  private float totalTSS = 0f;     // Gesamt-TSS
+    private float cumulativeTSS = 0f; // Kumulativer TSS
+
+    private float tss;
+    private float recoveryTime;
+
 
     private List<float> powerData = new List<float>();  // Liste zur Speicherung der Leistungsdaten
     public int averagingInterval = 30; // Gleitender Durchschnitt über 30 Sekunden
+
+    public bool riderStarted = false;
 
     void Start()
     {
@@ -216,6 +227,7 @@ public class PrefabDemoDisplay : MonoBehaviour
         myOffColor.a = 1;
         InvokeRepeating("CalculateAerobicTrainingEffect", 2.0f, 1.0f);
         gamePaused = true;
+        riderStarted = false;
 
         ftpZoneSlider.maxValue = ftpValue * zoneThresholds[zoneThresholds.Length - 1];
         zoneTimers = new float[zoneThresholds.Length];
@@ -263,8 +275,34 @@ public class PrefabDemoDisplay : MonoBehaviour
 
         //  lineRenderer = GetComponent<LineRenderer>();
         //  lineRenderer.positionCount = 0; // Starte ohne Punkte
+        cumulativeTSS = 0f;
+        // totalTSS = 0f;
 
-        totalTSS = 0f;
+        // Lade die gespeicherten Werte und setze sie in die Input Felder
+        if (PlayerPrefs.HasKey("FEC_Value"))
+        {
+            fecInputField.text = PlayerPrefs.GetInt("FEC_Value").ToString();
+        }
+
+        if (PlayerPrefs.HasKey("HR_Value"))
+        {
+            hrInputField.text = PlayerPrefs.GetInt("HR_Value").ToString();
+        }
+
+        if (PlayerPrefs.HasKey("Weight_Value"))
+        {
+            weightInputField.text = PlayerPrefs.GetInt("Weight_Value").ToString();
+        }
+
+        if (PlayerPrefs.HasKey("FTP_Value"))
+        {
+            ftpField.text = PlayerPrefs.GetInt("FTP_Value").ToString();
+        }
+
+        if (PlayerPrefs.HasKey("HRMax_Value"))
+        {
+            maxHrField.text = PlayerPrefs.GetInt("HRMax_Value").ToString();
+        }
 
     }
     
@@ -331,6 +369,7 @@ public class PrefabDemoDisplay : MonoBehaviour
             if (!gamePaused)
             {
                 gameTimer += Time.deltaTime;
+                //gameTimer = fec.GetComponent<FitnessEquipmentDisplay>().elapsedTime; //+= Time.deltaTime;
                 int hours = Mathf.FloorToInt(gameTimer / 3600);
                 int minutes = Mathf.FloorToInt((gameTimer % 3600) / 60);
                 int seconds = Mathf.FloorToInt(gameTimer % 60);
@@ -406,6 +445,11 @@ public class PrefabDemoDisplay : MonoBehaviour
             bikeRider.SetActive(!bikeRider.activeSelf);
         }
 
+        if (Input.GetKeyDown(PowerGraphKey))
+        {
+            powerGraph.SetActive(!powerGraph.activeSelf);
+        }
+
         if (Input.GetKeyDown(alternateComputer))
         {
             alternateComp.SetActive(!alternateComp.activeSelf);
@@ -421,14 +465,22 @@ public class PrefabDemoDisplay : MonoBehaviour
 
         }
 
-        if(t_speed > 0.1) 
-        //if (Input.GetKeyDown(timerKey))
+        if(t_speed >= 0.5)
         {
-            gamePaused = !gamePaused;
-        
+            riderStarted = true;
         }
 
-        if (powerValue >= ftpValue * zoneThresholds[zoneThresholds.Length - 1])
+        //if (Input.GetKeyDown(timerKey))
+        if (riderStarted == true)
+        {
+            gamePaused = false;
+        }
+        if (riderStarted == false)
+        {
+            gamePaused = true;
+        }
+
+            if (powerValue >= ftpValue * zoneThresholds[zoneThresholds.Length - 1])
         {
             if (!wasImageActivated)
             {
@@ -472,15 +524,24 @@ public class PrefabDemoDisplay : MonoBehaviour
         // Berechne die Normalized Power
         float normalizedPower = CalculateNormalizedPower();
 
-        // Berechne den aktuellen TSS-Wert basierend auf der Normalized Power und der FTP
-        totalTSS = CalculateTSS(normalizedPower, ftpValue, gameTimer);
+        /*  // Berechne den aktuellen TSS-Wert basierend auf der Normalized Power und der FTP
+          totalTSS = CalculateTSS(normalizedPower, ftpValue, gameTimer);
 
-        // Optional: TSS im UI anzeigen
-        if (tssDisplay != null)
-        {
-            tssDisplay.text = totalTSS.ToString("F0");
-        }
+          // Optional: TSS im UI anzeigen
+          if (tssDisplay != null)
+          {
+              tssDisplay.text = totalTSS.ToString("F0");
+          }
+        */
+        // Kumulative Berechnung des TSS
+        /* float currentTSSIncrement = CalculateTSSIncrement(normalizedPower, ftpValue, Time.deltaTime);
+         cumulativeTSS += currentTSSIncrement;
 
+         // Optional: TSS im UI anzeigen
+         if (tssDisplay != null)
+         {
+             tssDisplay.text = cumulativeTSS.ToString("F0");
+         }*/
         // Beispiel: Neue Leistungsdaten hinzufügen (in einem echten Fall kommen diese von einem Sensor)
         /*   float newPower = GetPowerData();
            powerData.Add(newPower);
@@ -494,6 +555,27 @@ public class PrefabDemoDisplay : MonoBehaviour
            // Update die Power-Grafik
            UpdatePowerGraph();
    */
+        // TSS in Echtzeit berechnen
+        // TSS in Echtzeit berechnen
+        // Berechnung des Intensitätsfaktors (IF)
+        float intensityFactor = t_power / ftpValue;
+        tss = (gameTimer % 3600 / 60) * intensityFactor * intensityFactor * 100;
+
+        // Herzfrequenz-Intensitätsfaktor berechnen
+        float hrIntensityFactor = heartRateCalculator.hr_average / maxHeartRate;
+
+        // Erholungszeit berechnen mit Herzfrequenz als zusätzlichem Faktor
+        recoveryTime = CalculateRecoveryTime(tss, hrIntensityFactor);
+
+        // Erholungszeit auf 72 Stunden begrenzen
+        recoveryTime = Mathf.Min(recoveryTime, 72f);
+
+      //  Debug.Log("Erholungszeit (in Stunden): " + recoveryTime);
+        if (tssDisplay != null)
+        {
+            tssDisplay.text = recoveryTime.ToString("F0");
+        }
+        
 
     }
 
@@ -551,19 +633,76 @@ public class PrefabDemoDisplay : MonoBehaviour
         maxHeartRateText.text = maxHeartRate.ToString();
     }
 
-    private void UpdateZoneColorAndTimers(float powerValue)
+    public bool ExceedsMaxPowerZone(float powerValue)
     {
-        bool exceededMaxZone = powerValue > ftpZoneSlider.maxValue;
+        return powerValue > ftpZoneSlider.maxValue;
+    }
+
+    /// <summary>
+    /// Get the power value in percentage compared to the user's Functional Threshold Power
+    /// </summary>
+    /// <returns>The current power value</returns>
+    public float GetPowerValue()
+    {
+        return t_power / ftpValue;
+    }
+
+
+    /// <summary>
+    /// Get the power value in percentage compared to the user's Functional Threshold Power
+    /// </summary>
+    /// <returns>The normalized power value</returns>
+    public float GetNormalizedPowerValue(float powerValue)
+    {
+        return powerValue / ftpValue;
+    }
+
+    /// <summary>
+    /// Get the power threshold value of the last zone
+    /// </summary>
+    /// <returns>The maximum power value</returns>
+    public float GetMaxPower()
+    { 
+        return zoneThresholds[zoneThresholds.Length - 1];
+    }
+
+    /// <summary>
+    /// Get the color of the corresponding Power Zone
+    /// </summary>
+    /// <param name="powerValue">The Power value</param>
+    /// <returns>The Power Zone color. If power exceeds last zone, defaults to a dark purple tint.</returns>
+    /// <exception cref="System.ArgumentException"></exception>
+    public Color GetPowerZoneColor(float powerValue)
+    {
+        if (ExceedsMaxPowerZone(powerValue)) return new Color(0.3f, 0f, 0.4f, 1f);
 
         for (int i = 0; i < zoneThresholds.Length; i++)
         {
-            if (exceededMaxZone || powerValue <= ftpValue * zoneThresholds[i])
-            {
-                sliderFill.color = exceededMaxZone ? new Color(0.3f, 0f, 0.4f, 1f) : zoneColors[i];
-                UpdateTimers(i, !exceededMaxZone);
-                break;
-            }
+            if (powerValue <= ftpValue * zoneThresholds[i]) return zoneColors[i];
         }
+        throw new System.ArgumentException($"GetPozerZoneColor: powerValue ({powerValue}) is not within zoneThresholds, nor exceeding maxValue!");
+    }
+
+    /// <summary>
+    /// Get the index of the corresponding Power Zone
+    /// </summary>
+    /// <param name="powerValue">The Power value</param>
+    /// <returns>The Power Zone index. If power exceeds last zone, the index will be the number of zones!</returns>
+    public int GetPowerZoneIndex(float powerValue)
+    {
+        for (int i = 0; i < zoneThresholds.Length; i++)
+        {
+            if (powerValue <= ftpValue * zoneThresholds[i]) return i;
+        }
+        return zoneThresholds.Length;
+    }
+    
+    private void UpdateZoneColorAndTimers(float powerValue)
+    {
+        bool exceededMaxZone = ExceedsMaxPowerZone(powerValue);
+
+        sliderFill.color = GetPowerZoneColor(powerValue);
+        UpdateTimers(GetPowerZoneIndex(powerValue), !exceededMaxZone);
 
         if (exceededMaxZone)
         {
@@ -1031,13 +1170,24 @@ public class PrefabDemoDisplay : MonoBehaviour
     }
 
     // Methode zur Berechnung des TSS-Werts
-    float CalculateTSS(float NP, float FTP, float timeInSeconds)
+    /*float CalculateTSS(float NP, float FTP, float timeInSeconds)
     {
         float IF = NP / FTP;  // Intensitätsfaktor
         float timeInHours = timeInSeconds / 3600f;  // Zeit in Stunden umrechnen
         float TSS = (timeInHours * NP * IF) / FTP * 100;
         return TSS;
-    }
+    }*/
+    // Methode zur Berechnung des TSS-Inkrements basierend auf der Zeitdifferenz
+    float CalculateTSSIncrement(float NP, float FTP, float deltaTime)
+    {
+        if (FTP == 0 || NP == 0) return 0f;  // Vermeidung von Division durch null
+
+        float IF = NP / FTP;  // Intensitätsfaktor
+        float timeInHours = deltaTime / 3600f;  // Zeit in Stunden umrechnen
+        float TSSIncrement = (timeInHours * NP * IF) / FTP * 100;
+
+        return TSSIncrement;
+    }       
 
     // Methode zur Sammlung der Leistungsdaten in jedem Frame
     void CollectPowerData(float power)
@@ -1097,6 +1247,28 @@ public class PrefabDemoDisplay : MonoBehaviour
             return new Color(0.5f, 0.0f, 0.0f); // Zone 7: Neuromuskulär (Dunkelrot)
     }
     */
+
+    /*  float CalculateTSS()
+      {
+          // Berechnung des Intensitätsfaktors (IF)
+          float intensityFactor = t_power / ftpValue;
+
+          // TSS berechnen
+          return (gameTimer/60f * intensityFactor * intensityFactor) * 100;
+      }*/
+
+    float CalculateRecoveryTime(float tss, float hrIntensityFactor)
+    {
+        // Dynamische Berechnung: Grundwert von 12 Stunden + zusätzlicher Faktor basierend auf TSS
+        float baseRecoveryTime = 12f + (tss / 50f) * 12f;  // Skaliert die Erholungszeit flexibel bis zu 72 Stunden
+
+        // Herzfrequenz-Intensitätsfaktor anpassen (0.7 ist die Basis, kann angepasst werden)
+        float adjustedRecoveryTime = baseRecoveryTime * (1 + hrIntensityFactor - 0.7f);
+
+        // Begrenzen der Erholungszeit auf maximal 72 Stunden
+        return Mathf.Min(adjustedRecoveryTime, 72f);
+    
+}
 }
 
 

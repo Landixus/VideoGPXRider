@@ -77,7 +77,7 @@ namespace ShadowGroveGames.RealWeatherAndTimeEvents.Scripts
         {
             if (Instance != null)
             {
-                Debug.LogError("You can have only one instance of RealWeatherAndTimeEventsScript!");
+             //   Debug.LogError("You can have only one instance of RealWeatherAndTimeEventsScript!");
                 Destroy(gameObject);
                 return;
             }
