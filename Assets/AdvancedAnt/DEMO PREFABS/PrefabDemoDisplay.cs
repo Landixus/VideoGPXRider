@@ -58,7 +58,7 @@ public class PrefabDemoDisplay : MonoBehaviour
     [Categorized, HideInInspector] public TMP_Text switchValueText;
     #endregion
 
-
+    public GameObject trainerSettings;
     private int maxPower = 0;
     private float maxCadence = 0;
     private float maxSpeed = 0f;
@@ -279,16 +279,16 @@ public class PrefabDemoDisplay : MonoBehaviour
         // totalTSS = 0f;
 
         // Lade die gespeicherten Werte und setze sie in die Input Felder
-        if (PlayerPrefs.HasKey("FEC_Value"))
+      /*  if (PlayerPrefs.HasKey("FEC_Value"))
         {
             fecInputField.text = PlayerPrefs.GetInt("FEC_Value").ToString();
-        }
-
+        }*/
+      /*
         if (PlayerPrefs.HasKey("HR_Value"))
         {
             hrInputField.text = PlayerPrefs.GetInt("HR_Value").ToString();
         }
-
+      */
         if (PlayerPrefs.HasKey("Weight_Value"))
         {
             weightInputField.text = PlayerPrefs.GetInt("Weight_Value").ToString();
@@ -393,6 +393,12 @@ public class PrefabDemoDisplay : MonoBehaviour
 
 
         }
+       
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                trainerSettings.SetActive(!trainerSettings.activeInHierarchy);
+            }
+        
 
         float powerValue = t_power;
         ftpZoneSlider.value = powerValue;
@@ -752,11 +758,11 @@ public class PrefabDemoDisplay : MonoBehaviour
         int value1, value2, value3, value4, value5;
 
         // Überprüfe, ob die Eingabefelder gültige Integer-Werte enthalten
-        if (int.TryParse(fecInputField.text, out value1) && int.TryParse(hrInputField.text, out value2) && int.TryParse(weightInputField.text, out value3) && int.TryParse(ftpField.text, out value4) && int.TryParse(maxHrField.text, out value5))
+        if (/*int.TryParse(fecInputField.text, out value1) && int.TryParse(hrInputField.text, out value2) && */int.TryParse(weightInputField.text, out value3) && int.TryParse(ftpField.text, out value4) && int.TryParse(maxHrField.text, out value5))
         {
             // Speichere die Werte in den PlayerPrefs mit eindeutigen Schlüsseln
-            PlayerPrefs.SetInt("FEC_Value", value1);
-            PlayerPrefs.SetInt("HR_Value", value2);
+        //    PlayerPrefs.SetInt("FEC_Value", value1);
+       //     PlayerPrefs.SetInt("HR_Value", value2);
             PlayerPrefs.SetInt("Weight_Value", value3);
             PlayerPrefs.SetInt("FTP_Value", value4);
             PlayerPrefs.SetInt("HRMax_Value", value5);
@@ -773,16 +779,16 @@ public class PrefabDemoDisplay : MonoBehaviour
 
     public void ConnectToDevices()
     {
-        if (PlayerPrefs.HasKey("FEC_Value") && PlayerPrefs.HasKey("HR_Value") && PlayerPrefs.HasKey("Weight_Value") && PlayerPrefs.HasKey("FTP_Value") && PlayerPrefs.HasKey("HRMax_Value"))
+        if (/*PlayerPrefs.HasKey("FEC_Value") && PlayerPrefs.HasKey("HR_Value") && */PlayerPrefs.HasKey("Weight_Value") && PlayerPrefs.HasKey("FTP_Value") && PlayerPrefs.HasKey("HRMax_Value"))
         {
-            int loadedValue1 = PlayerPrefs.GetInt("FEC_Value");
-            int loadedValue2 = PlayerPrefs.GetInt("HR_Value");
+         //   int loadedValue1 = PlayerPrefs.GetInt("FEC_Value");
+         //   int loadedValue2 = PlayerPrefs.GetInt("HR_Value");
             int loadedValue3 = PlayerPrefs.GetInt("Weight_Value");
             int loadedValue4 = PlayerPrefs.GetInt("FTP_Value");
             int loadedValue5 =  PlayerPrefs.GetInt("HRMax_Value");
 
-            fec.GetComponent<FitnessEquipmentDisplay>().deviceID = loadedValue1;
-            hr.GetComponent<HeartRateDisplay>().deviceID = loadedValue2;
+          //  fec.GetComponent<FitnessEquipmentDisplay>().deviceID = loadedValue1;
+          //  hr.GetComponent<HeartRateDisplay>().deviceID = loadedValue2;
             weightKg = loadedValue3;
             ftpValue = loadedValue4;
             maxHeartRate = loadedValue5;
@@ -800,13 +806,13 @@ public class PrefabDemoDisplay : MonoBehaviour
     public void ConnectAfterSave()
 
     {
-        int loadedValue1 = PlayerPrefs.GetInt("FEC_Value");
-        int loadedValue2 = PlayerPrefs.GetInt("HR_Value");
+       // int loadedValue1 = PlayerPrefs.GetInt("FEC_Value");
+      //  int loadedValue2 = PlayerPrefs.GetInt("HR_Value");
 
 
-        fec.GetComponent<FitnessEquipmentDisplay>().deviceID = loadedValue1;
-        hr.GetComponent<HeartRateDisplay>().deviceID = loadedValue2;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+      //  fec.GetComponent<FitnessEquipmentDisplay>().deviceID = loadedValue1;
+     //   hr.GetComponent<HeartRateDisplay>().deviceID = loadedValue2;
+     //   SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     void TakeScreenshot()

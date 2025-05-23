@@ -33,6 +33,9 @@ public class ElevationMap : Graphic
     private float distanceCalculated;
     public TMP_Text percentSlope;
 
+    private float slopeUpdateInterval = 0.25f; // 250 Millisekunden
+    private float lastSlopeUpdateTime = 0f;
+
 
 #if UNITY_EDITOR
     protected override void OnValidate()
@@ -199,7 +202,13 @@ public class ElevationMap : Graphic
             float drivedKm = distanceCalculated / 1000f; // (fitnessEquipmentDisplay.distanceTraveled / 1000f);
             kilometer_driven.text = drivedKm.ToString("F1");
             timeRemainFunc();
-            GetSlope();
+            if (Time.time - lastSlopeUpdateTime >= slopeUpdateInterval)
+            {
+                float currentSlope = Mathf.Clamp(GetSlope(), -20f, 20f);
+                percentSlope.text = currentSlope.ToString("F1"); // Optional: Anzeige hier machen
+                fitnessEquipmentDisplay.SetTrainerSlope((int)currentSlope);
+                lastSlopeUpdateTime = Time.time;
+            }
         }
     }
 
@@ -244,5 +253,6 @@ public class ElevationMap : Graphic
         percentSlope.text = ((deltaElevation / deltaDistance) * 100).ToString("F1");
         return (deltaElevation / deltaDistance) * 100;
        
+
     }
 }

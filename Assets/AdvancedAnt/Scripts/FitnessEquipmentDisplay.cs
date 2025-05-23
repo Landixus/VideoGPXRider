@@ -8,6 +8,7 @@ using System;
 
 
 
+
 public class TrainerCapabilities {
     public int maximumResistance;
     public bool basicResistanceNodeSupport;
@@ -43,7 +44,7 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
 
 
     //windows and mac settings
-    public bool autoConnectToFirstSensorFound = true; //for windows and mac, either connect to the first sensor found 
+    public bool autoConnectToFirstSensorFound = false; //for windows and mac, either connect to the first sensor found 
     public List<AntDevice> scanResult; //or let you pick a sensor manually in the scanResult list with your own UI and call ConnectToDevice(AntDevice device)
 
     //android settings
@@ -61,45 +62,66 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
     private TrainerCapabilities trainerCapabilities = new TrainerCapabilities();
 
     private AntChannel backgroundScanChannel;
-    private AntChannel deviceChannel;
+    public AntChannel deviceChannel;
     private byte[] pageToSend;
     private bool request_page_54 = false;
     private bool request_page_55 = false;
     private bool request_page_71 = false;
     public int deviceID = 0; //set this to connect to a specific device ID
-    public TMP_Text FEC_Device_Found;
+
+    public static FitnessEquipmentDisplay Instance { get; private set; }
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // doppelte Instanz entfernen
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
     void Start() {
 
-        deviceID = PlayerPrefs.GetInt("FEC_Value");
+     //   deviceID = PlayerPrefs.GetInt("FEC_Value");
         if (autoStartScan)
             StartScan();
+        Invoke("RequestCommandStatus", 2f);
+       // DontDestroyOnLoad(gameObject);
 
+       /* if (fitnessDisplay == null)
+        {
+            GameObject fitnessObj = new GameObject("FitnessEquipmentDisplay");
+            fitnessDisplay = fitnessObj.AddComponent<FitnessEquipmentDisplay>();
+            DontDestroyOnLoad(fitnessObj);
+        }*/
+    }
+
+    public void Update()
+    {
+        if (DataManager.Instance == null) return;
+        {
+            DataManager.Instance.UpdateSpeed(speed);
+          //  DataManager.Instance.UpdateDistance(distanceTraveled);
+            DataManager.Instance.UpdatePower(instantaneousPower);
+       //     Debug.Log("UpdatePower " + instantaneousPower);
+            DataManager.Instance.Updatecadence(cadence);
+
+        }
     }
 
     //Start a background Scan to find the device
+   
     public void StartScan() {
 
         Debug.Log("Looking for ANT + Fitness Equipment sensor");
-#if UNITY_ANDROID && !UNITY_EDITOR
-        //java : connect_fitness(String gameobjectName, boolean useAndroidUI, boolean skipPreferredSearch, int deviceID)
-
-        AndroidJNI.AttachCurrentThread();
-        using (AndroidJavaClass javaClass = new AndroidJavaClass("com.ant.plugin.Ant_Connector")) {
-            using (AndroidJavaObject activity = javaClass.GetStatic<AndroidJavaObject>("mContext")) {
-              
-                    activity.Call("connect_fitness", this.gameObject.name, useAndroidUI, skipPreferredSearch,deviceID);
-                
-            }
-        }
-#else
 
         AntManager.Instance.Init();
         scanResult = new List<AntDevice>();
         backgroundScanChannel = AntManager.Instance.OpenBackgroundScanChannel(0);
         backgroundScanChannel.onReceiveData += ReceivedBackgroundScanData;
-#endif
-
-
     }
 
 
@@ -187,7 +209,6 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
     }
 
 
-    //receive user config from android
     void ANTPLUG_Receive_trainer_userconfig(string jsonstring) {
         // cadence = (int)float.Parse(s);
     }
@@ -241,7 +262,7 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
 
             case AntplusDeviceType.FitnessEquipment: {
                     int deviceNumber = (data[10]) | data[11] << 8;
-                    deviceID = PlayerPrefs.GetInt("FEC_Value");
+               //     deviceID = PlayerPrefs.GetInt("FEC_Value");
                     //int deviceNumber = deviceID;
                     byte transType = data[13];
                     foreach (AntDevice d in scanResult) {
@@ -263,7 +284,7 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
                     {
                            ConnectToDevice(foundDevice);
                     }
-                    FEC_Device_Found.text = "FEC(" +foundDevice.deviceNumber.ToString()+")";
+                  //  FEC_Device_Found.text = "FEC(" +foundDevice.deviceNumber.ToString()+")";
                     break;
                 }
 
@@ -275,7 +296,7 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
 
     }
 
-    void ConnectToDevice(AntDevice device) {
+  public  void ConnectToDevice(AntDevice device) {
         AntManager.Instance.CloseBackgroundScanChannel();
         byte channelID = AntManager.Instance.GetFreeChannelID();
         deviceChannel = AntManager.Instance.OpenChannel(ANT_ReferenceLibrary.ChannelType.BASE_Slave_Receive_0x00, channelID, (ushort)device.deviceNumber, device.deviceType, device.transType, (byte)device.radiofreq, (ushort)device.period, false);
@@ -284,8 +305,6 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
         deviceChannel.onChannelResponse += ChannelResponse;
         deviceChannel.hideRXFAIL = true;
     }
-
-
     //Deal with the received Data
     int prevDistance = 0;
     float prevTime = 0;
@@ -322,9 +341,6 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
 
             //speed
             speed = ((data[4]) | data[5] << 8) * 0.0036f;
-
-
-
         }
 
         if (data[0] == 25) {  // Specific Trainer Data
@@ -333,9 +349,7 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
             int nibble2 = (byte)(data[6] & 0xf);
             instantaneousPower = (data[5]) | nibble2 << 8;
 
-
         } else if (data[0] == 54 && request_page_54 == true) { //response to trainer capabilities request from PC & MAC
-
 
             request_page_54 = false;
 
@@ -355,8 +369,11 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
             int riderWeight = (data[1]) | (data[2] << 8);
 
             UserConfiguration conf = new UserConfiguration();
-            conf.userWeight = riderWeight * 0.01f;
-            conf.bicycleWeight = bikeWeight * 0.05f;
+            conf.userWeight = PlayerPrefs.GetInt("UserWeight", 70);
+            conf.bicycleWeight = 8f * 0.05f;
+
+            //conf.userWeight = riderWeight * 0.01f;
+            //conf.bicycleWeight = bikeWeight * 0.05f;
 
             ReadUserConFig(conf);
 
@@ -381,6 +398,11 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
         Debug.Log("Last_Received_Command_ID: " + status.lastReceivedCommandId);
         Debug.Log("sequence_number: " + status.lastReceivedSequenceNumber);
         Debug.Log("command_status: " + status.status);
+        //if (FindObjectOfType<TrainerController>() != null)
+        if(FindFirstObjectByType<TrainerController>() != null)
+        {
+            FindFirstObjectByType<TrainerController>().UpdateTrainerStatus(status);
+        }
 
         if (status.lastReceivedCommandId == 51) {   //we are in Track resistance Mode
 
@@ -405,41 +427,21 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
 
         Debug.Log("rider weight is: " + config.userWeight);
         Debug.Log("bike weight is: " + config.bicycleWeight);
-     
     }
-
 
     //set the trainer in resistance mode, if the trainer has basicResistanceNodeSupport 
     public void SetTrainerResistance(int resistance) {
         if (!connected)
             return;
-#if UNITY_ANDROID && !UNITY_EDITOR
-        
-        AndroidJNI.AttachCurrentThread();
-        using (AndroidJavaClass javaClass = new AndroidJavaClass("com.ant.plugin.Ant_Connector")) {
-            using (AndroidJavaObject activity = javaClass.GetStatic<AndroidJavaObject>("mContext")) {
-                activity.Call("Set_fitness_Resistance",resistance);
-            }
-        }
-#else
         pageToSend = new byte[8] { 0x30, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, (byte)(resistance * 2) };//unit is 0.50%
         deviceChannel.sendAcknowledgedData(pageToSend);
-#endif
+
     }
 
     //set the trainer in target power if the trainer has targetPowerModeSupport 
     public void SetTrainerTargetPower(int targetpower) {
         if (!connected)
             return;
-#if UNITY_ANDROID && !UNITY_EDITOR
-        
-        AndroidJNI.AttachCurrentThread();
-        using (AndroidJavaClass javaClass = new AndroidJavaClass("com.ant.plugin.Ant_Connector")) {
-            using (AndroidJavaObject activity = javaClass.GetStatic<AndroidJavaObject>("mContext")) {
-                activity.Call("Set_fitness_TargetPower",targetpower);
-            }
-        }
-#else
 
         Debug.Log("sending target power of " + targetpower + " watts to trainer");
         byte LSB = (byte)(targetpower * 4);
@@ -447,25 +449,13 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
 
         pageToSend = new byte[8] { 0x31, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, LSB, MSB };//unit is 0.25w
         deviceChannel.sendAcknowledgedData(pageToSend);
-#endif
+
     }
     //set the trainer in simulation mode if the trainer has simulationModeSupport 
     public void SetTrainerSlope(int slope) {
         if (!connected)
             return;
         slope = Mathf.Clamp(slope, -200, 200);
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-        
-          
-        AndroidJNI.AttachCurrentThread();
-        using (AndroidJavaClass javaClass = new AndroidJavaClass("com.ant.plugin.Ant_Connector")) {
-            using (AndroidJavaObject activity = javaClass.GetStatic<AndroidJavaObject>("mContext")) {
-                activity.Call("Set_fitness_SimulationMode",slope);
-            }
-        }
-#else
-
         slope += 200;
         // Units are 0.01%
         slope *= 100;
@@ -475,28 +465,12 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
         byte[] pageToSend = new byte[8] { 0x33, 0xFF, 0xFF, 0xFF, 0xFF, gradeLsb, gradeMsb, 0xFF };
         deviceChannel.sendAcknowledgedData(pageToSend);
 
-#endif
     }
 
     //send use configuration
     public void SetTrainerUserConfiguration(float bikeWeight, float userWeight) {
         if (!connected)
             return;
-
-
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-        
-        
-
-        AndroidJNI.AttachCurrentThread();
-        using (AndroidJavaClass javaClass = new AndroidJavaClass("com.ant.plugin.Ant_Connector")) {
-            using (AndroidJavaObject activity = javaClass.GetStatic<AndroidJavaObject>("mContext")) {
-                activity.Call("Set_fitness_UserConfiguration",bikeWeight,userWeight);
-            }
-        }
-#else
-
 
         int rawBikeWeight = Mathf.FloorToInt((bikeWeight / 0.05f));
         int rawUserWeight = Mathf.FloorToInt((userWeight / 0.01f));
@@ -509,7 +483,7 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
         pageToSend = new byte[8] { 0x37, weightLSB, weightMSB, 0xFF, bikeweightLSB, bikeweightMSB, 0xFF, 0x00 };
 
         deviceChannel.sendAcknowledgedData(pageToSend);
-#endif
+
     }
 
     //check if the last command was successfull and get current mode data (target power, resistandce, slope)
@@ -518,21 +492,8 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
             return;
         request_page_71 = true;
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-        
-       
-        AndroidJNI.AttachCurrentThread();
-        using (AndroidJavaClass javaClass = new AndroidJavaClass("com.ant.plugin.Ant_Connector")) {
-            using (AndroidJavaObject activity = javaClass.GetStatic<AndroidJavaObject>("mContext")) {
-                activity.Call("Request_CommandStatus");
-            }
-        }
-#else
-
         byte[] pageToSend = new byte[8] { 0x46, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x47, 0x01 };
         deviceChannel.sendAcknowledgedData(pageToSend);
-#endif
-
 
     }
     //check the supported mode
@@ -541,42 +502,17 @@ public class FitnessEquipmentDisplay : MonoBehaviour {
             return;
         request_page_54 = true;
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-        
-        AndroidJNI.AttachCurrentThread();
-        using (AndroidJavaClass javaClass = new AndroidJavaClass("com.ant.plugin.Ant_Connector")) {
-            using (AndroidJavaObject activity = javaClass.GetStatic<AndroidJavaObject>("mContext")) {
-                activity.Call("Request_trainer_capabilities");
-            }
-        }
-#else
 
         byte[] pageToSend = new byte[8] { 0x46, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x36, 0x01 };
         deviceChannel.sendAcknowledgedData(pageToSend);
-#endif
-
-
     }
     //get the user config
     public void RequestUserConfig() {
         if (!connected)
             return;
         request_page_55 = true;
-
-#if UNITY_ANDROID && !UNITY_EDITOR
-        
-        AndroidJNI.AttachCurrentThread();
-        using (AndroidJavaClass javaClass = new AndroidJavaClass("com.ant.plugin.Ant_Connector")) {
-            using (AndroidJavaObject activity = javaClass.GetStatic<AndroidJavaObject>("mContext")) {
-                activity.Call("Request_UserConfig");
-            }
-        }
-#else
-
         byte[] pageToSend = new byte[8] { 0x46, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x37, 0x01 };
         deviceChannel.sendAcknowledgedData(pageToSend);
-#endif
-
 
     }
     void ChannelResponse(ANT_Response response) {

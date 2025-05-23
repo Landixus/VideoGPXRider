@@ -35,18 +35,19 @@ public class HeartRateDisplay : MonoBehaviour {
     public float heartRate; // the computed HR count  in BPM
 
     private AntChannel backgroundScanChannel;
-    private AntChannel deviceChannel;
+    public AntChannel deviceChannel;
     public int deviceID = 0; //set this to connect to a specific device ID
 
-    public TMP_Text  HR_Device_Found;
+  //  public TMP_Text  HR_Device_Found;
   
 
     void Start() {
 
-        deviceID = PlayerPrefs.GetInt("HR_Value");
+      //  deviceID = PlayerPrefs.GetInt("HR_Value");
         if (autoStartScan)
             StartScan();
-
+        DontDestroyOnLoad(gameObject);
+       // Invoke("RequestCommandStatus", 2f);
     }
 
     //Start a background Scan to find the device
@@ -54,7 +55,8 @@ public class HeartRateDisplay : MonoBehaviour {
 
         Debug.Log("Looking for ANT + HeartRate sensor");
 
-#if UNITY_ANDROID && !UNITY_EDITOR
+
+   #if UNITY_ANDROID && !UNITY_EDITOR
         
         //java: connect_heartrate(String gameobjectName, boolean useAndroidUI, boolean skipPreferredSearch, int deviceID)
         AndroidJNI.AttachCurrentThread();
@@ -72,7 +74,14 @@ public class HeartRateDisplay : MonoBehaviour {
         backgroundScanChannel.onReceiveData += ReceivedBackgroundScanData;
 #endif
     
+    }
 
+    public void Update()
+    {
+
+        if (DataManager.Instance == null) return;
+      //  Invoke("RequestCommandStatus", 2f);
+        DataManager.Instance.UpdateHeartRate((int)heartRate);
 
     }
     //Android functions
@@ -153,7 +162,7 @@ public class HeartRateDisplay : MonoBehaviour {
 
             case AntplusDeviceType.HeartRate: {
                     int deviceNumber = (data[10]) | data[11] << 8;
-                    deviceID = PlayerPrefs.GetInt("HR_Value");
+                 //   deviceID = PlayerPrefs.GetInt("HR_Value");
                     //int deviceNumber = deviceID;
                     byte transType = data[13];
                     foreach (AntDevice d in scanResult) {
@@ -175,7 +184,7 @@ public class HeartRateDisplay : MonoBehaviour {
                     {
                         ConnectToDevice(foundDevice);
                     }
-                    HR_Device_Found.text = "HR(" + foundDevice.deviceNumber.ToString() + ")";
+                  //  HR_Device_Found.text = "HR(" + foundDevice.deviceNumber.ToString() + ")";
                     break;
                 }
 
@@ -187,7 +196,7 @@ public class HeartRateDisplay : MonoBehaviour {
 
     }
 
-    void ConnectToDevice(AntDevice device) {
+    public void ConnectToDevice(AntDevice device) {
         AntManager.Instance.CloseBackgroundScanChannel();
         byte channelID = AntManager.Instance.GetFreeChannelID();
         deviceChannel = AntManager.Instance.OpenChannel(ANT_ReferenceLibrary.ChannelType.BASE_Slave_Receive_0x00, channelID, (ushort)device.deviceNumber, device.deviceType, device.transType, (byte)device.radiofreq, (ushort)device.period, false);
