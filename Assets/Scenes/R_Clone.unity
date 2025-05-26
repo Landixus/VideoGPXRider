@@ -13640,7 +13640,7 @@ MonoBehaviour:
   buttenText: {fileID: 696079515}
   timeText: {fileID: 1163361094}
   elevationMap: {fileID: 1576790090}
-  checkInterval: 1
+  checkInterval: 0.5
 --- !u!81 &872176809
 AudioListener:
   m_ObjectHideFlags: 0

@@ -46,6 +46,7 @@ public class VideoSpeed : MonoBehaviour
 
     private float updateInterval = 0.25f; // Zeitintervall in Sekunden
     private float timeSinceLastUpdate = 0f;
+    private float smoothedSpeed = 1f;
 
     private void Start()
     {
@@ -89,13 +90,26 @@ public class VideoSpeed : MonoBehaviour
             if (fec.GetComponent<FitnessEquipmentDisplay>().speed >= 1)
             {
                 float speed = fec.GetComponent<FitnessEquipmentDisplay>().speed;
-           //     Debug.Log("FECSpeed" + fec.GetComponent<FitnessEquipmentDisplay>().speed);
-                //get video length to calculate a reference speed. 
                 speed /= referenceSpeed;
-                videoPlayer.playbackSpeed = speed * speedMultiplier;
 
-                //  Debug.Log("RefSpeed" + referenceSpeed.ToString());
+                float targetSpeed = speed * speedMultiplier;
+
+                // Sanfte Interpolation
+                smoothedSpeed = Mathf.Lerp(smoothedSpeed, targetSpeed, 0.1f); // smoothing factor
+                smoothedSpeed = Mathf.Clamp(smoothedSpeed, minVideoSpeed, maxVideoSpeed);
+
+                videoPlayer.playbackSpeed = smoothedSpeed;
             }
+            /*  if (fec.GetComponent<FitnessEquipmentDisplay>().speed >= 1)
+              {
+                  float speed = fec.GetComponent<FitnessEquipmentDisplay>().speed;
+             //     Debug.Log("FECSpeed" + fec.GetComponent<FitnessEquipmentDisplay>().speed);
+                  //get video length to calculate a reference speed. 
+                  speed /= referenceSpeed;
+                  videoPlayer.playbackSpeed = speed * speedMultiplier;
+
+                  //  Debug.Log("RefSpeed" + referenceSpeed.ToString());
+              }*/
         }
        
 
@@ -144,37 +158,60 @@ public class VideoSpeed : MonoBehaviour
 
     }
 
-  
 
-  
 
-    void AdjustSpeed()
+    void AdjustSpeed()  //new test for smoother riding
     {
-        // Only execute if the GPX exists and track length has been stored in the distance slider
         if (elevationMap.distanceSlider.maxValue <= 0f) return;
-        // Get the percentage we've travelled
-     //   float distPercent = fec.distanceTraveled / elevationMap.distanceSlider.maxValue;
+
         float distPercent = distanceCalculated / elevationMap.distanceSlider.maxValue;
-        // Get the time of the video that matches the travel distance
-        float expectedVideoTime = (float)(distPercent * videoPlayer.length);
-        // If the time doesn't match, we speed the video up/down
-        float timeDifference = (expectedVideoTime - (float)videoPlayer.time) ;
-      //  Debug.Log("Time Dif: " + timeDifference + " seconds");
-      //  Debug.Log("ExpVT: " + expectedVideoTime + " seconds");
-      //  Debug.Log("ExpVT: " + distPercent + " dis%");
-        if (Mathf.Abs(timeDifference) > 0.1f)
+        float expectedVideoTime = distPercent * (float)videoPlayer.length;
+        float timeDifference = expectedVideoTime - (float)videoPlayer.time;
+
+        if (Mathf.Abs(timeDifference) > 3f)
         {
-            speedMultiplier = MathUtils.Map(timeDifference, -10, 10, 0.9f, 1.1f);
-            speedMultiplier = Mathf.Clamp(speedMultiplier, 0.9f, 1.1f);
-          //  Debug.Log("SpeMulti: " + speedMultiplier + " dis%");
+            // Bei zu großer Abweichung direkt korrigieren
+            videoPlayer.time = expectedVideoTime;
+        }
+        else if (Mathf.Abs(timeDifference) > 0.1f)
+        {
+            // Feinjustierung mit kleinerem Korrekturbereich
+            speedMultiplier = MathUtils.Map(timeDifference, -5, 5, 0.95f, 1.05f);
+            speedMultiplier = Mathf.Clamp(speedMultiplier, 0.95f, 1.05f);
         }
         else
         {
             speedMultiplier = 1f;
         }
-
-
     }
+
+    /* void AdjustSpeed()
+     {
+         // Only execute if the GPX exists and track length has been stored in the distance slider
+         if (elevationMap.distanceSlider.maxValue <= 0f) return;
+         // Get the percentage we've travelled
+      //   float distPercent = fec.distanceTraveled / elevationMap.distanceSlider.maxValue;
+         float distPercent = distanceCalculated / elevationMap.distanceSlider.maxValue;
+         // Get the time of the video that matches the travel distance
+         float expectedVideoTime = (float)(distPercent * videoPlayer.length);
+         // If the time doesn't match, we speed the video up/down
+         float timeDifference = (expectedVideoTime - (float)videoPlayer.time) ;
+       //  Debug.Log("Time Dif: " + timeDifference + " seconds");
+       //  Debug.Log("ExpVT: " + expectedVideoTime + " seconds");
+       //  Debug.Log("ExpVT: " + distPercent + " dis%");
+         if (Mathf.Abs(timeDifference) > 0.1f)
+         {
+             speedMultiplier = MathUtils.Map(timeDifference, -10, 10, 0.9f, 1.1f);
+             speedMultiplier = Mathf.Clamp(speedMultiplier, 0.9f, 1.1f);
+           //  Debug.Log("SpeMulti: " + speedMultiplier + " dis%");
+         }
+         else
+         {
+             speedMultiplier = 1f;
+         }
+
+
+     }*/
 
     void GetRefSpeed()
     {

@@ -209,7 +209,7 @@ public class PrefabDemoDisplay : MonoBehaviour
 
   //  private float elapsedTime = 0f;  // Zeit in Sekunden
   //  private float totalTSS = 0f;     // Gesamt-TSS
-    private float cumulativeTSS = 0f; // Kumulativer TSS
+  //  private float cumulativeTSS = 0f; // Kumulativer TSS
 
     private float tss;
     private float recoveryTime;
@@ -275,7 +275,7 @@ public class PrefabDemoDisplay : MonoBehaviour
 
         //  lineRenderer = GetComponent<LineRenderer>();
         //  lineRenderer.positionCount = 0; // Starte ohne Punkte
-        cumulativeTSS = 0f;
+       // cumulativeTSS = 0f;
         // totalTSS = 0f;
 
         // Lade die gespeicherten Werte und setze sie in die Input Felder
@@ -755,7 +755,7 @@ public class PrefabDemoDisplay : MonoBehaviour
 
     public void SaveValuesToPlayerPrefs()
     {
-        int value1, value2, value3, value4, value5;
+        int /*value1, value2,*/ value3, value4, value5;
 
         // Überprüfe, ob die Eingabefelder gültige Integer-Werte enthalten
         if (/*int.TryParse(fecInputField.text, out value1) && int.TryParse(hrInputField.text, out value2) && */int.TryParse(weightInputField.text, out value3) && int.TryParse(ftpField.text, out value4) && int.TryParse(maxHrField.text, out value5))
