@@ -41,6 +41,8 @@ https://drive.google.com/file/d/1YW9sjoyJYtaBj1ilf8PM8FzxgmDE-d13/view?usp=shari
 
 Best use on TV with 1920x1080
 ![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/Overlay_data/screens/gpx_mp4match.png "GPX_MP4_Match")
+![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/3.png "NewTSS_and_KCAL")
+![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/4.png "NewCourseOverview")
 ![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/1.png "VideoMode")
 ![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/2.png "TransparentMode")
 
