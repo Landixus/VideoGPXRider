@@ -3,7 +3,8 @@ Ride VideoFile with or without GPX, set a transparent Overlay
 
 How it works!
 
-Unity Version 2021.3.36f1
+Unity Version 2021.3.45f2 (Security Fix)
+In the Release are many changes, Summary Screen, Ghost, TSS, Estimated FTP, and more.
 
 There are some Projects from GitHub and Unity included in this Project:
 Unity:
@@ -37,7 +38,7 @@ Added VP9 Video Codec support for highest Quality
 Added more precise sync between video and gpx file.
 Added Cours Overview
 Download release: 
-https://drive.google.com/file/d/1YW9sjoyJYtaBj1ilf8PM8FzxgmDE-d13/view?usp=sharing
+https://drive.google.com/file/d/16jOx7IK6bFoBenTf1nlJ-knkPTpSPcnU/view?usp=sharing
 
 Best use on TV with 1920x1080
 ![Alt text](https://github.com/Landixus/VideoGPXRider/blob/main/Overlay_data/screens/gpx_mp4match.png "GPX_MP4_Match")
